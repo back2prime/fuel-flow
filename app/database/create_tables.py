@@ -3,7 +3,7 @@ import asyncio
 from app.database.connect_db import engine
 from app.database.models import Base
 
-from app.database.models import StationsModel
+from app.database.models import StationModel
 
 
 async def init_models():
