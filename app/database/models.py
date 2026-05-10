@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Mapped,mapped_column,relationship
 from sqlalchemy import ForeignKey
 
-from base import Base
+from core.base import Base
 
 from uuid import UUID
 
