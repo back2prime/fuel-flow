@@ -22,7 +22,7 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 from core import Base
 from core import db_settings
-from app.database.models import Station,Price
+from app.database.models import Station, Price
 
 target_metadata = Base.metadata
 
@@ -30,7 +30,8 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-config.set_main_option("sqlalchemy.url",db_settings.url)
+config.set_main_option("sqlalchemy.url", db_settings.url)
+
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.

@@ -1,9 +1,11 @@
 from pydantic import BaseModel, Field
 from uuid import UUID
 
+
 class StationsGetSchemes(BaseModel):
     address: str = Field(max_length=50)
     radius: float = Field(le=25)
+
 
 class StationsShowSchemes(BaseModel):
     station_id: UUID = Field(alias="id")
