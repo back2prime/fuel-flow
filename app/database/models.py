@@ -5,17 +5,17 @@ from core.base import Base
 
 from uuid import UUID
 
-class StationModel(Base):
+class Station(Base):
 
     name: Mapped[str]
     address: Mapped[str]
-    prices = relationship(argument="PricesModel",back_populates="station")
+    prices = relationship(argument="Price",back_populates="station")
 
-class PriceModel(Base):
+class Price(Base):
 
     station_id: Mapped[UUID] = mapped_column(ForeignKey("stations.id"))
-    diesel: Mapped[float]
-    e5: Mapped[float]
-    e10: Mapped[float]
-    station = relationship(argument="StationsModel",back_populates="prices")
+    diesel: Mapped[float | None]
+    e5: Mapped[float | None]
+    e10: Mapped[float | None]
+    station = relationship(argument="Station",back_populates="prices")
 

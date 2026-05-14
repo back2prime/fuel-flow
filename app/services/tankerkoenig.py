@@ -1,6 +1,6 @@
 import httpx
 
-from config import settings
+from core.config import settings
 from app.schemes import StationsGetSchemes
 from app.services.utils import get_coords, edit_response
 
