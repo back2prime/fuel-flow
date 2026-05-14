@@ -22,7 +22,6 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 from core import Base
 from core import db_settings
-from app.database.models import Station, Price
 
 target_metadata = Base.metadata
 
