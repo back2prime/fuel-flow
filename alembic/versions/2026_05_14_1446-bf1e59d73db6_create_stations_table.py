@@ -1,8 +1,8 @@
 """Create stations table
 
-Revision ID: 7d05a383c5a5
+Revision ID: bf1e59d73db6
 Revises:
-Create Date: 2026-05-14 13:17:41.087240
+Create Date: 2026-05-14 14:46:14.366156
 
 """
 
@@ -12,7 +12,7 @@ from alembic import op
 import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
-revision: str = "7d05a383c5a5"
+revision: str = "bf1e59d73db6"
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
