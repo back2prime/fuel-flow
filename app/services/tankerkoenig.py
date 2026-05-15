@@ -1,7 +1,7 @@
 import httpx
 
 from core.config import settings
-from app.schemes import StationsGetSchemes
+from app.stations.schemes import StationsGetSchemes
 from app.services.utils import get_coords, edit_response
 
 BASE_URL = "https://creativecommons.tankerkoenig.de/json"
@@ -15,7 +15,8 @@ async def get_stations(obj: StationsGetSchemes) -> list:
         "lat": lat,
         "lng": lng,
         "rad": obj.radius,
-        "type": "all",
+        "type": obj.fuel_type.value,
+        "sort": obj.sort_type.value,
         "apikey": settings.API_KEY,
     }
 
