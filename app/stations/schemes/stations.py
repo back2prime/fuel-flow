@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from app.emuns import FuelType, SortType
+from app.enums import FuelType, SortType
 
 
 class StationsGetSchemes(BaseModel):
