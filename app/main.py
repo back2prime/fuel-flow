@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.routers import router as fuel_router
+from app.stations.endpoints.readers import router as fuel_router
 
 app = FastAPI()
 

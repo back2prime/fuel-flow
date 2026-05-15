@@ -1,18 +1,18 @@
 from pydantic import BaseModel, Field
-from uuid import UUID
+
+from app.emuns import FuelType, SortType
 
 
 class StationsGetSchemes(BaseModel):
-    address: str = Field(max_length=50)
+    address: str = Field(max_length=255)
     radius: float = Field(le=25)
+    fuel_type: FuelType
+    sort_type: SortType
 
 
 class StationsShowSchemes(BaseModel):
-    station_id: UUID = Field(alias="id")
     name: str
     address: str
     distance_to: float = Field(alias="dist")
     is_open: bool = Field(alias="isOpen")
-    diesel: float | None = None
-    e5: float | None = None
-    e10: float | None = None
+    fuel_price: float | None = Field(alias="price")
