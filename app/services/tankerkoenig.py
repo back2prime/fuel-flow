@@ -1,26 +1,10 @@
-import httpx
-
-from core.config import settings
 from app.stations.schemes import StationsGetSchemes
 from app.services.utils import get_coords, edit_response
-
-BASE_URL = "https://creativecommons.tankerkoenig.de/json"
+from core.http_helper import http_helper
 
 
 async def get_stations(obj: StationsGetSchemes) -> list:
-    url = f"{BASE_URL}/list.php"
-    lat, lng = get_coords(obj)
-
-    params = {
-        "lat": lat,
-        "lng": lng,
-        "rad": obj.radius,
-        "type": obj.fuel_type.value,
-        "sort": obj.sort_type.value,
-        "apikey": settings.API_KEY,
-    }
-
-    async with httpx.AsyncClient() as client:
-        response = await client.get(url, params=params)
-
-    return edit_response(response.json()["stations"])
+    stmt = obj.model_dump(mode="json", by_alias=True)
+    stmt["lat"], stmt["lng"] = get_coords(stmt.pop("address"))
+    response = await http_helper.get_response(params=stmt, api_method="list.php")
+    return edit_response(response["stations"])
