@@ -1,12 +1,10 @@
 from geopy.geocoders import Nominatim
 
-from app.stations.schemes import StationsGetSchemes
-
 geolocator = Nominatim(user_agent="my_app")
 
 
-def get_coords(obj: StationsGetSchemes) -> tuple:
-    location = geolocator.geocode(obj.address)
+def get_coords(address: str) -> tuple:
+    location = geolocator.geocode(address)
     return location.latitude, location.longitude
 
 
