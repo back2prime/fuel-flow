@@ -5,9 +5,9 @@ from app.enums import FuelType, SortType
 
 class StationsGetSchemes(BaseModel):
     address: str = Field(max_length=255)
-    radius: float = Field(le=25)
-    fuel_type: FuelType
-    sort_type: SortType
+    radius: float = Field(le=25, serialization_alias="rad")
+    fuel_type: FuelType = Field(serialization_alias="type")
+    sort_type: SortType = Field(serialization_alias="sort")
 
 
 class StationsShowSchemes(BaseModel):
