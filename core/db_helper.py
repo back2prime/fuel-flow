@@ -4,6 +4,11 @@ from core.config import db_settings
 
 
 class DatabaseHelper:
+    """Async database helper for managing SQLAlchemy engine and sessions.
+
+    Creates and manages a single async engine and session factory
+    for the lifetime of the application.
+    """
 
     def __init__(self, url: str, echo: bool, pool_pre_ping: bool):
         self.engine = create_async_engine(
