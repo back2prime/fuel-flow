@@ -8,14 +8,23 @@ def get_coords(address: str) -> tuple:
     return location.latitude, location.longitude
 
 
-def edit_response(response: list) -> list:
+def edit_address(response: dict) -> dict:
+    address = (
+        f"{response.pop('postCode', '')} {response.pop('place', '')}"
+        f" {response.pop('street', '')} {response.pop('houseNumber','')}"
+    )
+    response["address"] = address
+    return response
+
+
+def edit_stations_response(response: list[dict]) -> list[dict]:
     result = []
     for station in response:
         if station["isOpen"] and station["price"]:
-            address = (
-                f"{station.pop('postCode', '')} {station.pop('place', '')} "
-                f"{station.pop('street', '')} {station.pop('houseNumber', '')}"
-            )
-            station["address"] = address
+            edit_address(station)
             result.append(station)
     return result
+
+
+def edit_station_response(response: dict) -> dict:
+    return edit_address(response)
