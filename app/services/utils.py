@@ -5,7 +5,7 @@ geolocator = Nominatim(user_agent="my_app")
 
 def get_coords(address: str) -> tuple:
     location = geolocator.geocode(address)
-    return location.latitude, location.longitude
+    return round(location.latitude,3), round(location.longitude,3)
 
 
 def edit_address(response: dict) -> dict:
