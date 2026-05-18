@@ -27,3 +27,6 @@ class StationShowInfo(StationShowBase):
     openingTimes: list[dict] | None
     overrides: list | None
     wholeDay: bool | None
+    e5: float | None
+    e10: float | None
+    diesel: float | None
