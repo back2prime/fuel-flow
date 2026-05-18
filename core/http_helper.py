@@ -3,6 +3,8 @@ import httpx
 from core import settings
 from core.constants import HTTP_URL
 
+from fastapi import HTTPException
+from starlette import status
 
 class HttpHelper:
     """Async HTTP client helper for making API requests.
@@ -16,9 +18,13 @@ class HttpHelper:
 
     async def get_response(self, params: dict, api_method: str):
         params["apikey"] = self._apikey
-        response = await self._client.get(self._url + api_method, params=params)
-        return response.json()
-
+        try:
+            response = await self._client.get(self._url + api_method, params=params)
+            return response.json()
+        except httpx.ReadTimeout:
+            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="API timeout")
+        except httpx.RequestError:
+            raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="API unavailable")
     async def close(self):
         await self._client.aclose()
 
