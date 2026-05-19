@@ -5,6 +5,11 @@ from core.constants import REDIS_URL
 
 
 class RedisHelper:
+    """Async Redis helper for caching API responses.
+
+    Manages a single Redis client instance for the lifetime of the application.
+    Stores and retrieves JSON-serialized data with TTL support.
+    """
     def __init__(self, url: str):
         self._url = url
         self._client = Redis.from_url(self._url)
