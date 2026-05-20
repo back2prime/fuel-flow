@@ -1,6 +1,4 @@
-__all__ = ["Station", "Price", "Base"]
+__all__ = ["Base"]
 
 
-from app.stations.models.stations import Station
-from app.prices.models.price import Price
 from .base import Base
