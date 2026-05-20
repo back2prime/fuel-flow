@@ -1,4 +1,4 @@
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncEngine
 
 from core.config import db_settings
 
@@ -11,7 +11,7 @@ class DatabaseHelper:
     """
 
     def __init__(self, url: str, echo: bool, pool_pre_ping: bool):
-        self.engine = create_async_engine(
+        self.engine: AsyncEngine = create_async_engine(
             url=url,
             echo=echo,
             pool_pre_ping=pool_pre_ping,

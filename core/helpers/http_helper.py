@@ -6,6 +6,7 @@ from core.constants import HTTP_URL
 from fastapi import HTTPException
 from starlette import status
 
+
 class HttpHelper:
     """Async HTTP client helper for making API requests.
 
@@ -17,7 +18,7 @@ class HttpHelper:
         self._apikey = apikey
         self._client = httpx.AsyncClient()
 
-    async def get_response(self, params: dict, api_method: str):
+    async def get_response(self, params: dict, api_method: str) -> dict:
         params["apikey"] = self._apikey
         try:
             response = await self._client.get(self._url + api_method, params=params)
@@ -32,7 +33,7 @@ class HttpHelper:
                 detail="API unavailable",
             )
 
-    async def close(self):
+    async def close(self) -> None:
         await self._client.aclose()
 
 

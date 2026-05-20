@@ -32,5 +32,6 @@ def edit_station_response(response: dict) -> dict:
     return edit_address(response)
 
 
-def create_redis_key(obj: StationsGetSchemes, lat: float, lng: float) -> str:
-    return f"stations:{str(lat)}:{str(lng)}:{str(obj.radius)}:{obj.fuel_type.value}:{obj.sort_type.value}"
+def create_cache_key(prefix: str, **kwargs) -> str:
+    values = ":".join(str(v) for v in kwargs.values())
+    return f"{prefix}:{values}"

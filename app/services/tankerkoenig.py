@@ -9,13 +9,13 @@ from core.helpers.http_helper import http_helper
 from starlette import status
 
 from core.helpers.redis_helper import redis_helper
-from app.services.utils import create_redis_key
+from app.services.utils import create_cache_key
 
 
 async def get_stations(obj: StationsGetSchemes) -> list[dict]:
     stmt = obj.model_dump(mode="json", by_alias=True)
     stmt["lat"], stmt["lng"] = get_coords(stmt.pop("address"))
-    key = create_redis_key(obj, stmt["lat"], stmt["lng"])
+    key = create_cache_key("stations", **stmt)
     redis_response = await redis_helper.get(key=key)
 
     if not redis_response:
