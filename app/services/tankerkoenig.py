@@ -4,11 +4,11 @@ import json
 
 from app.stations.schemes import StationsGetSchemes
 from app.services.utils import get_coords, edit_stations_response, edit_station_response
-from core.http_helper import http_helper
+from core.helpers.http_helper import http_helper
 
 from starlette import status
 
-from core.redis_helper import redis_helper
+from core.helpers.redis_helper import redis_helper
 from app.services.utils import create_redis_key
 
 

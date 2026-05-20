@@ -1,11 +1,10 @@
 import httpx
 
-from core import settings
+from core.config import settings
 from core.constants import HTTP_URL
 
 from fastapi import HTTPException
 from starlette import status
-
 
 class HttpHelper:
     """Async HTTP client helper for making API requests.

@@ -13,7 +13,7 @@ __all__ = [
 
 
 from core.models.base import Base
-from .db_helper import DatabaseHelper, db_helper
+from core.helpers.db_helper import DatabaseHelper, db_helper
 from .config import ApiSettings, DatabaseSettings, db_settings, settings
 from .constants import BACKEND_DIR
 from app.prices.models.price import Price
