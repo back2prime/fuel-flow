@@ -1,6 +1,11 @@
-from geopy.geocoders import Nominatim
+import json
+from typing import Any
 
-from app.stations.schemes import StationsGetSchemes
+from fastapi import HTTPException
+from geopy.geocoders import Nominatim
+from starlette import status
+
+from core.helpers import http_helper, redis_helper
 
 geolocator = Nominatim(user_agent="my_app")
 
@@ -35,3 +40,28 @@ def edit_station_response(response: dict) -> dict:
 def create_cache_key(prefix: str, **kwargs) -> str:
     values = ":".join(str(v) for v in kwargs.values())
     return f"{prefix}:{values}"
+
+
+async def check_response(
+    response: str | None, params: dict[str, Any], method: str, key: str
+) -> list[dict]:
+    if not response:
+        try:
+            api_response = await http_helper.get_response(
+                params=params, api_method=method
+            )
+            if not api_response["ok"]:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=api_response["message"],
+                )
+            edit_response = edit_stations_response(api_response["stations"])
+            await redis_helper.set(key=key, value=json.dumps(edit_response), ex=1800)
+            return edit_response
+        except KeyError:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Unexpected API response",
+            )
+    else:
+        return json.loads(response)

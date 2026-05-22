@@ -1,9 +1,12 @@
 from fastapi import HTTPException
 
-import json
 
 from app.stations.schemes import StationsGetSchemes
-from app.services.utils import get_coords, edit_stations_response, edit_station_response
+from app.services.utils import (
+    get_coords,
+    edit_station_response,
+    check_response,
+)
 from core.helpers.http_helper import http_helper
 
 from starlette import status
@@ -18,25 +21,9 @@ async def get_stations(obj: StationsGetSchemes) -> list[dict]:
     key = create_cache_key("stations", **stmt)
     redis_response = await redis_helper.get(key=key)
 
-    if not redis_response:
-        try:
-            response = await http_helper.get_response(
-                params=stmt, api_method="list.php"
-            )
-            if not response["ok"]:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST, detail=response["message"]
-                )
-            edit_response = edit_stations_response(response["stations"])
-            await redis_helper.set(key=key, value=json.dumps(edit_response), ex=1800)
-            return edit_response
-        except KeyError:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Unexpected API response",
-            )
-    else:
-        return json.loads(redis_response)
+    return await check_response(
+        response=redis_response, params=stmt, method="list.php", key=key
+    )
 
 
 async def get_specific_station(station_id: str) -> dict:
