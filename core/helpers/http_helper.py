@@ -37,4 +37,4 @@ class HttpHelper:
         await self._client.aclose()
 
 
-http_helper = HttpHelper(url=HTTP_URL, apikey=settings.API_KEY)
+http_helper = HttpHelper(url=HTTP_URL, apikey=settings.api.API_KEY)

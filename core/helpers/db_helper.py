@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine, AsyncEngine
 
-from core.config import db_settings
+from core.config import settings
 
 
 class DatabaseHelper:
@@ -25,5 +25,5 @@ class DatabaseHelper:
 
 
 db_helper = DatabaseHelper(
-    url=db_settings.url, echo=db_settings.echo, pool_pre_ping=db_settings.pool_pre_ping
+    url=settings.db.url, echo=settings.db.echo, pool_pre_ping=settings.db.pool_pre_ping
 )

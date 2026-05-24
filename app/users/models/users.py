@@ -1,8 +1,8 @@
 from datetime import date
 
 import bcrypt
-from sqlalchemy.orm import Mapped, relationship, mapped_column
-from sqlalchemy import String, Date
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String
 
 from core import settings
 from core.models.base import Base

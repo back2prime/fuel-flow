@@ -3,8 +3,8 @@ __all__ = [
     "DatabaseHelper",
     "DatabaseSettings",
     "db_helper",
-    "db_settings",
     "settings",
+    "Settings",
     "ApiSettings",
     "BACKEND_DIR",
 ]
@@ -12,5 +12,5 @@ __all__ = [
 
 from core.models.base import Base
 from core.helpers.db_helper import DatabaseHelper, db_helper
-from .config import ApiSettings, DatabaseSettings, db_settings, settings
+from .config import ApiSettings, DatabaseSettings, Settings, settings
 from .constants import BACKEND_DIR
