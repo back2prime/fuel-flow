@@ -25,11 +25,11 @@ class User(Base):
         )
 
     def set_password(self, password: str) -> None:
-        """Генерация пароля"""
+        """Hash and set user password"""
         self.password_hash = self.generate_password_hash(password)
 
     def check_password(self, password: str) -> bool:
-        """Проверка пароля"""
+        """Verify password against stored hash"""
         return bcrypt.checkpw(
             password.encode(settings.encoding),
             self.password_hash.encode(settings.encoding),
