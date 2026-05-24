@@ -12,7 +12,7 @@ from core.helpers.http_helper import http_helper
 from starlette import status
 
 from core.helpers.redis_helper import redis_helper
-from app.services.utils import create_cache_key
+from core.cache import create_cache_key
 
 
 async def get_stations(obj: StationsGetSchemes) -> list[dict]:

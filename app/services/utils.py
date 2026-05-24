@@ -37,11 +37,6 @@ def edit_station_response(response: dict) -> dict:
     return edit_address(response)
 
 
-def create_cache_key(prefix: str, **kwargs) -> str:
-    values = ":".join(str(v) for v in kwargs.values())
-    return f"{prefix}:{values}"
-
-
 async def check_response(
     response: str | None, params: dict[str, Any], method: str, key: str
 ) -> list[dict]:
