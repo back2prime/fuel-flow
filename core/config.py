@@ -19,5 +19,10 @@ class DatabaseSettings(BaseSettings):
     )
 
 
-settings = ApiSettings()
-db_settings = DatabaseSettings()
+class Settings(BaseSettings):
+    api: ApiSettings = ApiSettings()
+    db: DatabaseSettings = DatabaseSettings()
+    encoding: str = "utf-8"
+
+
+settings = Settings()
