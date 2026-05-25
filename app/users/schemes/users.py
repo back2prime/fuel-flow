@@ -1,13 +1,24 @@
-from pydantic import Field, EmailStr
+from uuid import UUID
+
+from pydantic import Field, EmailStr, BaseModel
 from datetime import date
 
 from core.scheme import FrozenModelType
 
 
-class Registration(FrozenModelType):
+class RegistrationScheme(FrozenModelType):
     login: str = Field(max_length=50)
     email: EmailStr = Field(max_length=100)
     password: str
     name: str | None = Field(default=None, max_length=50)
     surname: str | None = Field(default=None, max_length=50)
+    birth_date: date | None
+
+
+class UserGetSchemes(BaseModel):
+    id: UUID
+    login: str
+    email: EmailStr
+    name: str | None
+    surname: str | None
     birth_date: date | None
