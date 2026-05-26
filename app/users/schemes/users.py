@@ -3,10 +3,10 @@ from uuid import UUID
 from pydantic import Field, EmailStr, BaseModel
 from datetime import date
 
-from core.scheme import FrozenModelType
+from core.schemes import FrozenModelType
 
 
-class RegistrationScheme(FrozenModelType):
+class UserRegisterScheme(FrozenModelType):
     login: str = Field(max_length=50)
     email: EmailStr = Field(max_length=100)
     password: str
@@ -15,10 +15,15 @@ class RegistrationScheme(FrozenModelType):
     birth_date: date | None
 
 
-class UserGetSchemes(BaseModel):
+class UserGetScheme(BaseModel):
     id: UUID
     login: str
     email: EmailStr
     name: str | None
     surname: str | None
     birth_date: date | None
+
+
+class UserLoginScheme(FrozenModelType):
+    login: str = Field(max_length=50)
+    password: str

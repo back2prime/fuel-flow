@@ -1,6 +1,7 @@
 __all__ = [
-    "UserGetSchemes",
-    "RegistrationScheme",
+    "UserLoginScheme",
+    "UserRegisterScheme",
+    "UserGetScheme",
 ]
 
-from .users import UserGetSchemes, RegistrationScheme
+from .users import UserLoginScheme, UserRegisterScheme, UserGetScheme
