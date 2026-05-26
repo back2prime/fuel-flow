@@ -1,34 +1,28 @@
-from sqlalchemy import select, Result
+from sqlalchemy import select, Result, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.users.models import User
-from app.users.schemes import RegistrationScheme, UserGetSchemes
+from app.users.schemes import RegistrationScheme
 
 from fastapi import HTTPException, status
 
 
 async def check_email_and_login(login: str, email: str, session: AsyncSession) -> None:
-    login_query = select(User.login).where(User.login == login)
-    login_query_result: Result = await session.execute(login_query)
-    login_result = login_query_result.scalar_one_or_none()
+    query = select(User.login, User.email).where(
+        or_(User.login == login, User.email == email)
+    )
+    result = await session.execute(query)
+    rows = result.all()
 
-    email_query = select(User.email).where(User.email == email)
-    email_query_result: Result = await session.execute(email_query)
-    email_result = email_query_result.scalar_one_or_none()
+    taken_logins = {row.login for row in rows}
+    taken_emails = {row.email for row in rows}
 
-    if login_result and email_result:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="This login and email is already taken",
-        )
-    elif login_result:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT, detail="This login is already taken"
-        )
-    elif email_result:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT, detail="This email is already taken"
-        )
+    if login in taken_logins and email in taken_emails:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="This login and email are already taken")
+    if login in taken_logins:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="This login is already taken")
+    if email in taken_emails:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="This email is already taken")
 
 
 async def create_user(data: RegistrationScheme, session: AsyncSession) -> User:
