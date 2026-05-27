@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from app.stations.schemes import StationsGetSchemes, StationsShowSchemes
+from app.stations.schemes.stations import StationsGetSchemes, StationsShowSchemes
 from app.services.tankerkoenig import get_stations, get_specific_station
 from app.stations.schemes.stations import StationShowInfo
 

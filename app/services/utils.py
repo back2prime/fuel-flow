@@ -5,7 +5,8 @@ from fastapi import HTTPException
 from geopy.geocoders import Nominatim
 from starlette import status
 
-from core.helpers import http_helper, redis_helper
+from core.helpers.http_helper import http_helper
+from core.helpers.redis_helper import redis_helper
 
 geolocator = Nominatim(user_agent="my_app")
 

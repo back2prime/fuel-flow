@@ -1,4 +1,4 @@
-from core.schemes import FrozenModelType
+from core.schemes.base_schema import FrozenModelType
 
 
 class TokenScheme(FrozenModelType):

@@ -1,11 +1,12 @@
 from fastapi import APIRouter
 
-from app.users import User, CurrentUser
-from app.users.schemes import UserGetScheme, UserRegisterScheme, UserLoginScheme
+from app.users.dependencies import CurrentUser
+from app.users.models.users import User
+from app.users.schemes.users import UserGetScheme, UserRegisterScheme, UserLoginScheme
 
 from app.database.dependencies import SessionDep
 from app.users.services import create_user, auth_user
-from core.schemes import TokenScheme
+from core.schemes.jwt_token_scheme import TokenScheme
 
 user_routers = APIRouter()
 

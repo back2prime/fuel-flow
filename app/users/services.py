@@ -3,8 +3,8 @@ import jwt
 from sqlalchemy import select, Result, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.users.models import User
-from app.users.schemes import UserRegisterScheme, UserLoginScheme
+from app.users.models.users import User
+from app.users.schemes.users import UserRegisterScheme, UserLoginScheme
 
 from fastapi import HTTPException, status
 
@@ -12,7 +12,7 @@ import datetime
 from datetime import timezone
 
 from core.constants import JWT_EXPIRE_SECONDS
-from core.helpers import http_helper
+from core.helpers.http_helper import http_helper
 
 
 async def check_email_and_login(login: str, email: str, session: AsyncSession) -> None:

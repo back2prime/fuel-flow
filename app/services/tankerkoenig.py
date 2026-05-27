@@ -1,7 +1,7 @@
 from fastapi import HTTPException
 
 
-from app.stations.schemes import StationsGetSchemes
+from app.stations.schemes.stations import StationsGetSchemes
 from app.services.utils import (
     get_coords,
     edit_station_response,

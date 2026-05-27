@@ -6,9 +6,9 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy import select
 from starlette import status
 
-from app.database import SessionDep
-from app.users import User
-from core.helpers import http_helper
+from app.database.dependencies import SessionDep
+from app.users.models.users import User
+from core.helpers.http_helper import http_helper
 
 security = HTTPBearer()
 

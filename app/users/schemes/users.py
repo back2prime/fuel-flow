@@ -3,7 +3,7 @@ from uuid import UUID
 from pydantic import Field, EmailStr, BaseModel
 from datetime import date
 
-from core.schemes import FrozenModelType
+from core.schemes.base_schema import FrozenModelType
 
 
 class UserRegisterScheme(FrozenModelType):
