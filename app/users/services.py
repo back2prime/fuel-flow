@@ -8,7 +8,7 @@ from app.users.schemes import UserRegisterScheme, UserLoginScheme
 
 from fastapi import HTTPException, status
 
-import time, datetime
+import datetime
 from datetime import timezone
 
 from core.constants import JWT_EXPIRE_SECONDS
@@ -20,7 +20,7 @@ async def check_email_and_login(login: str, email: str, session: AsyncSession) -
         or_(User.login == login, User.email == email)
     )
     result: Result = await session.execute(query)
-    rows = result.scalars().all()
+    rows = result.all()
 
     taken_logins = {row.login for row in rows}
     taken_emails = {row.email for row in rows}
@@ -68,6 +68,15 @@ async def auth_user(data: UserLoginScheme, session: AsyncSession) -> str:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Password is wrong"
         )
-    payload = {"sub":str(response.id),"exp": datetime.datetime.now(tz=timezone.utc) + datetime.timedelta(seconds=JWT_EXPIRE_SECONDS)}
-    jwt_token = jwt.encode(payload=payload,key=http_helper._apikey,algorithm="HS256", headers={"typ": None})
-    return jwt_token 
+    payload = {
+        "sub": str(response.id),
+        "exp": datetime.datetime.now(tz=timezone.utc)
+        + datetime.timedelta(seconds=JWT_EXPIRE_SECONDS),
+    }
+    jwt_token = jwt.encode(
+        payload=payload,
+        key=http_helper._apikey,
+        algorithm="HS256",
+        headers={"typ": None},
+    )
+    return jwt_token
