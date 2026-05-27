@@ -16,8 +16,7 @@ user_routers = APIRouter()
     response_model=UserGetScheme,
 )
 async def register_user(data: UserRegisterScheme, db: SessionDep) -> User:
-    result = await create_user(data=data, session=db)
-    return result
+    return await create_user(data=data, session=db)
 
 
 @user_routers.post(
@@ -26,13 +25,13 @@ async def register_user(data: UserRegisterScheme, db: SessionDep) -> User:
     response_model=TokenScheme,
 )
 async def login_user(data: UserLoginScheme, db: SessionDep) -> dict:
-    token = await auth_user(data=data, session=db)
-    return {"access_token": token, "token_type": "bearer"}
+    return {"access_token":  await auth_user(data=data, session=db), "token_type": "bearer"}
+
 
 @user_routers.get(
     path="/users/me",
     tags=["Users"],
     response_model=UserGetScheme,
 )
-async def get_user(user:CurrentUser) -> User:
+async def get_user(user: CurrentUser) -> User:
     return user
