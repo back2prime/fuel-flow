@@ -1,10 +1,8 @@
-import jwt
-
 from sqlalchemy import select, Result, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.users.models.users import User
-from app.users.schemes.users import UserRegisterScheme, UserLoginScheme
+from app.users.schemes.users import UserRegisterScheme, UserLoginScheme, UserPatchScheme
 
 from fastapi import HTTPException, status
 
@@ -12,14 +10,21 @@ import datetime
 from datetime import timezone
 
 from core.constants import JWT_EXPIRE_SECONDS
-from core.helpers.http_helper import http_helper
 from core.helpers.jwt_helper import jwt_helper
 
 
-async def check_email_and_login(login: str, email: str, session: AsyncSession) -> None:
-    query = select(User.login, User.email).where(
-        or_(User.login == login, User.email == email)
-    )
+async def check_email_and_login(
+    login: str | None, email: str | None, session: AsyncSession
+) -> None:
+    conditions = []
+    if login:
+        conditions.append(User.login == login)
+    if email:
+        conditions.append(User.email == email)
+    if not conditions:
+        return
+
+    query = select(User.login, User.email).where(or_(*conditions))
     result: Result = await session.execute(query)
     rows = result.all()
 
@@ -76,3 +81,17 @@ async def auth_user(data: UserLoginScheme, session: AsyncSession) -> str:
     }
 
     return jwt_helper.encode(payload=payload)
+
+
+async def edit_user(user: User, data: UserPatchScheme, session: AsyncSession) -> User:
+    result = data.model_dump(exclude_unset=True)
+    login = result.get("login")
+    email = result.get("email")
+    if login or email:
+        await check_email_and_login(login=login, email=email, session=session)
+    for k, v in result.items():
+        setattr(user, k, v)
+
+    await session.commit()
+    await session.refresh(user)
+    return user

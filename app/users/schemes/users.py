@@ -1,3 +1,4 @@
+from typing import Optional
 from uuid import UUID
 
 from pydantic import Field, EmailStr, BaseModel
@@ -27,3 +28,11 @@ class UserGetScheme(BaseModel):
 class UserLoginScheme(FrozenModelType):
     login: str = Field(max_length=50)
     password: str
+
+
+class UserPatchScheme(BaseModel):
+    login: Optional[str] = None
+    email: Optional[EmailStr] = None
+    name: Optional[str] = None
+    surname: Optional[str] = None
+    birth_date: Optional[date] = None

@@ -2,10 +2,15 @@ from fastapi import APIRouter
 
 from app.users.dependencies import CurrentUser
 from app.users.models.users import User
-from app.users.schemes.users import UserGetScheme, UserRegisterScheme, UserLoginScheme
+from app.users.schemes.users import (
+    UserGetScheme,
+    UserRegisterScheme,
+    UserLoginScheme,
+    UserPatchScheme,
+)
 
 from app.database.dependencies import SessionDep
-from app.users.services import create_user, auth_user
+from app.users.services import create_user, auth_user, edit_user
 from core.schemes.jwt_token_scheme import TokenScheme
 
 user_routers = APIRouter()
@@ -39,3 +44,12 @@ async def login_user(data: UserLoginScheme, db: SessionDep) -> dict:
 )
 async def get_user(user: CurrentUser) -> User:
     return user
+
+
+@user_routers.patch(
+    path="/users/me",
+    tags=["Users"],
+    response_model=UserGetScheme,
+)
+async def patch_user(data: UserPatchScheme, db: SessionDep, user: CurrentUser) -> User:
+    return await edit_user(user=user, data=data, session=db)
