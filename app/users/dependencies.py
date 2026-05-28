@@ -8,7 +8,8 @@ from starlette import status
 
 from app.database.dependencies import SessionDep
 from app.users.models.users import User
-from core.helpers.http_helper import http_helper
+
+from core.helpers.jwt_helper import jwt_helper
 
 security = HTTPBearer()
 
@@ -17,9 +18,8 @@ async def get_current_user(
     session: SessionDep, credentials: HTTPAuthorizationCredentials = Depends(security)
 ) -> User:
     try:
-        result = jwt.decode(
-            jwt=credentials.credentials, key=http_helper._apikey, algorithms="HS256"
-        )
+        result = jwt_helper.decode(token=credentials.credentials)
+
     except jwt.exceptions.PyJWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Token was expired"

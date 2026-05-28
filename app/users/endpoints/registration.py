@@ -26,7 +26,10 @@ async def register_user(data: UserRegisterScheme, db: SessionDep) -> User:
     response_model=TokenScheme,
 )
 async def login_user(data: UserLoginScheme, db: SessionDep) -> dict:
-    return {"access_token":  await auth_user(data=data, session=db), "token_type": "bearer"}
+    return {
+        "access_token": await auth_user(data=data, session=db),
+        "token_type": "bearer",
+    }
 
 
 @user_routers.get(

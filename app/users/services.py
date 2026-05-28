@@ -13,6 +13,7 @@ from datetime import timezone
 
 from core.constants import JWT_EXPIRE_SECONDS
 from core.helpers.http_helper import http_helper
+from core.helpers.jwt_helper import jwt_helper
 
 
 async def check_email_and_login(login: str, email: str, session: AsyncSession) -> None:
@@ -73,10 +74,5 @@ async def auth_user(data: UserLoginScheme, session: AsyncSession) -> str:
         "exp": datetime.datetime.now(tz=timezone.utc)
         + datetime.timedelta(seconds=JWT_EXPIRE_SECONDS),
     }
-    jwt_token = jwt.encode(
-        payload=payload,
-        key=http_helper._apikey,
-        algorithm="HS256",
-        headers={"typ": None},
-    )
-    return jwt_token
+
+    return jwt_helper.encode(payload=payload)
