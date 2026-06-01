@@ -119,3 +119,7 @@ async def change_password(
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED, detail="Password is wrong"
     )
+
+
+async def logout(user: User) -> dict:
+    return {"status": "ok"}

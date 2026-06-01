@@ -17,6 +17,7 @@ from app.users.services import (
     edit_user,
     remove_user,
     change_password,
+    logout,
 )
 from core.schemes.common import TokenScheme, StatusScheme
 
@@ -44,6 +45,15 @@ async def login_user(data: UserLoginScheme, db: SessionDep) -> dict:
     }
 
 
+@user_routers.post(
+    path="/auth/logout",
+    tags=["Users"],
+    response_model=StatusScheme,
+)
+async def logout_user(user: CurrentUser) -> dict:
+    return await logout(user=user)
+
+
 @user_routers.get(
     path="/users/me",
     tags=["Users"],
@@ -69,7 +79,7 @@ async def patch_user(data: UserPatchScheme, db: SessionDep, user: CurrentUser) -
 )
 async def patch_user_password(
     data: UserPasswordPatchScheme, db: SessionDep, user: CurrentUser
-):
+) -> dict:
     return await change_password(data=data, session=db, user=user)
 
 
