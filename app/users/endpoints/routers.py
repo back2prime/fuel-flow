@@ -7,10 +7,17 @@ from app.users.schemes.users import (
     UserRegisterScheme,
     UserLoginScheme,
     UserPatchScheme,
+    UserPasswordPatchScheme,
 )
 
 from app.database.dependencies import SessionDep
-from app.users.services import create_user, auth_user, edit_user, remove_user
+from app.users.services import (
+    create_user,
+    auth_user,
+    edit_user,
+    remove_user,
+    change_password,
+)
 from core.schemes.common import TokenScheme, StatusScheme
 
 user_routers = APIRouter()
@@ -55,10 +62,21 @@ async def patch_user(data: UserPatchScheme, db: SessionDep, user: CurrentUser) -
     return await edit_user(user=user, data=data, session=db)
 
 
+@user_routers.patch(
+    path="/users/me/password",
+    tags=["Users"],
+    response_model=StatusScheme,
+)
+async def patch_user_password(
+    data: UserPasswordPatchScheme, db: SessionDep, user: CurrentUser
+):
+    return await change_password(data=data, session=db, user=user)
+
+
 @user_routers.delete(
     path="/users/me",
     tags=["Users"],
     response_model=StatusScheme,
 )
 async def delete_user(db: SessionDep, user: CurrentUser) -> dict:
-    return await remove_user(user=user, session=db)
+    return await remove_user(session=db, user=user)

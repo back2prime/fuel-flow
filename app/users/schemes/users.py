@@ -36,3 +36,8 @@ class UserPatchScheme(BaseModel):
     name: Optional[str] = None
     surname: Optional[str] = None
     birth_date: Optional[date] = None
+
+
+class UserPasswordPatchScheme(BaseModel):
+    old_password: str
+    new_password: str

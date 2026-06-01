@@ -2,7 +2,12 @@ from sqlalchemy import select, Result, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.users.models.users import User
-from app.users.schemes.users import UserRegisterScheme, UserLoginScheme, UserPatchScheme
+from app.users.schemes.users import (
+    UserRegisterScheme,
+    UserLoginScheme,
+    UserPatchScheme,
+    UserPasswordPatchScheme,
+)
 
 from fastapi import HTTPException, status
 
@@ -101,3 +106,16 @@ async def remove_user(user: User, session: AsyncSession) -> dict:
     await session.delete(user)
     await session.commit()
     return {"status": "ok"}
+
+
+async def change_password(
+    user: User, data: UserPasswordPatchScheme, session: AsyncSession
+) -> dict:
+    if user.check_password(data.old_password):
+        user.set_password(data.new_password)
+        await session.commit()
+        await session.refresh(user)
+        return {"status": "ok"}
+    raise HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED, detail="Password is wrong"
+    )
