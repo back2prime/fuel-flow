@@ -1,11 +1,16 @@
 from datetime import date
+from typing import TYPE_CHECKING
+
 
 import bcrypt
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String
 
 from core.config import settings
 from core.models.base import Base
+
+if TYPE_CHECKING:
+    from app.stations.models.favorites import Favourite
 
 
 class User(Base):
@@ -16,6 +21,10 @@ class User(Base):
     name: Mapped[str | None]
     surname: Mapped[str | None]
     birth_date: Mapped[date | None]
+
+    favourites: Mapped[list["Favourite"]] = relationship(
+        argument="Favourite", back_populates="user"
+    )
 
     @staticmethod
     def generate_password_hash(password: str) -> str:

@@ -25,6 +25,7 @@ from core.config import settings
 from app.prices.models.price import Price
 from app.stations.models.stations import Station
 from app.users.models.users import User
+from app.stations.models.favorites import Favourite
 
 # Add new models here for Alembic to detect them
 target_metadata = Base.metadata
