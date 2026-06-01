@@ -13,6 +13,8 @@ if TYPE_CHECKING:
 
 
 class Favourite(Base):
+    """Association table linking users to their favourite stations."""
+
     user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"))
     station_id: Mapped[UUID] = mapped_column(ForeignKey("stations.id"))
 

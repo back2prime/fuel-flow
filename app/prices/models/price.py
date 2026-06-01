@@ -12,6 +12,7 @@ if TYPE_CHECKING:
 
 
 class Price(Base):
+    """Fuel prices for a station."""
 
     station_id: Mapped[UUID] = mapped_column(ForeignKey("stations.id"))
     diesel: Mapped[float | None]

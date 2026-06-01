@@ -14,6 +14,8 @@ if TYPE_CHECKING:
 
 
 class User(Base):
+    """User model with authentication and profile fields."""
+
     login: Mapped[str] = mapped_column(String(50), unique=True)
     email: Mapped[str] = mapped_column(String(100), unique=True)
     password_hash: Mapped[str] = mapped_column(String(255))

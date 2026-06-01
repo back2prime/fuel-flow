@@ -11,6 +11,7 @@ if TYPE_CHECKING:
 
 
 class Station(Base):
+    """Gas station with address and associated prices."""
 
     name: Mapped[str] = mapped_column(String(50))
     address: Mapped[str] = mapped_column(String(255))
