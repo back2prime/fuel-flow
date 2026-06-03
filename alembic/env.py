@@ -22,7 +22,7 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 from core.models.base import Base
 from core.config import settings
-from app.registry import Price, Station, User, Favourite
+from app.registry import User, Favourite
 
 # Add new models here for Alembic to detect them
 target_metadata = Base.metadata

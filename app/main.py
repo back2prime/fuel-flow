@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
+from app import registry
 
 from app.favourites.endpoints.routers import favourites_routers as fav_router
 from app.stations.endpoints.routers import stations_routers as st_router
