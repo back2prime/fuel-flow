@@ -7,7 +7,7 @@ from core.models.base import Base
 
 if TYPE_CHECKING:
     from app.prices.models.price import Price
-    from app.stations.models.favorites import Favourite
+    from app.favourites.models.favorites import Favourite
 
 
 class Station(Base):

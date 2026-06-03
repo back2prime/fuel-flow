@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
+from app.favourites.endpoints.favourites import favourites_routers as fav_router
 from app.stations.endpoints.readers import stations_routers as st_router
 from app.users.endpoints.routers import user_routers as ur_router
 from core.helpers.http_helper import http_helper
@@ -18,3 +19,4 @@ app = FastAPI(lifespan=lifespan)
 
 app.include_router(st_router)
 app.include_router(ur_router)
+app.include_router(fav_router)

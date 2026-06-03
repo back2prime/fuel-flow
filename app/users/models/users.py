@@ -10,7 +10,7 @@ from core.config import settings
 from core.models.base import Base
 
 if TYPE_CHECKING:
-    from app.stations.models.favorites import Favourite
+    from app.favourites.models.favorites import Favourite
 
 
 class User(Base):
