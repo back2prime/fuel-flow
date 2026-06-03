@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
-from app.favourites.endpoints.favourites import favourites_routers as fav_router
-from app.stations.endpoints.readers import stations_routers as st_router
+from app.favourites.endpoints.routers import favourites_routers as fav_router
+from app.stations.endpoints.routers import stations_routers as st_router
 from app.users.endpoints.routers import user_routers as ur_router
 from core.helpers.http_helper import http_helper
 from core.helpers.redis_helper import redis_helper
