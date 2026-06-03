@@ -18,6 +18,3 @@ class Station(Base):
     prices: Mapped[list["Price"]] = relationship(
         argument="Price", back_populates="station"
     )
-    favourites: Mapped[list["Favourite"]] = relationship(
-        argument="Favourite", back_populates="station"
-    )
