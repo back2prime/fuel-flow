@@ -1,8 +1,8 @@
-"""add favourites table
+"""add_favourites_table
 
-Revision ID: 450d114a2e5b
+Revision ID: c68cf9d55ad4
 Revises: 522bf22f85d7
-Create Date: 2026-06-01 11:18:36.148824
+Create Date: 2026-06-03 10:40:06.590588
 
 """
 
@@ -12,7 +12,7 @@ from alembic import op
 import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
-revision: str = "450d114a2e5b"
+revision: str = "c68cf9d55ad4"
 down_revision: Union[str, Sequence[str], None] = "522bf22f85d7"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -24,12 +24,8 @@ def upgrade() -> None:
     op.create_table(
         "favourites",
         sa.Column("user_id", sa.UUID(), nullable=False),
-        sa.Column("station_id", sa.UUID(), nullable=False),
+        sa.Column("station_id", sa.String(), nullable=False),
         sa.Column("id", sa.UUID(), nullable=False),
-        sa.ForeignKeyConstraint(
-            ["station_id"],
-            ["stations.id"],
-        ),
         sa.ForeignKeyConstraint(
             ["user_id"],
             ["users.id"],
