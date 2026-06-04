@@ -16,13 +16,19 @@ class RedisSettings(BaseSettings):
     )
 
 class DatabaseSettings(BaseSettings):
+    echo: bool = False
+    pool_pre_ping: bool = True
     user: str
     password: str
     host: str
     port: int
     name: str
 
-    model_config = SettingsConfigDict(env_prefix='DB_')
+    model_config = SettingsConfigDict(
+        env_file=BACKEND_DIR / ".env",
+        env_prefix="DB_",
+        extra="ignore"
+    )
 
     @property
     def url(self) -> str:
