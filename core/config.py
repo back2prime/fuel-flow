@@ -16,12 +16,17 @@ class RedisSettings(BaseSettings):
     )
 
 class DatabaseSettings(BaseSettings):
-    url: str = Field(alias="DATABASE_URL")
-    echo: bool = False
-    pool_pre_ping: bool = True
-    model_config = SettingsConfigDict(
-        env_file=BACKEND_DIR / ".env", populate_by_name=True, extra="ignore"
-    )
+    user: str
+    password: str
+    host: str
+    port: int
+    name: str
+
+    model_config = SettingsConfigDict(env_prefix='DB_')
+
+    @property
+    def url(self) -> str:
+        return f"postgresql+asyncpg://{self.user}:{self.password}@{self.host}:{self.port}/{self.name}"
 
 
 class Settings(BaseSettings):
