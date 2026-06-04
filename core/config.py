@@ -9,11 +9,13 @@ class ApiSettings(BaseSettings):
 
     model_config = SettingsConfigDict(env_file=BACKEND_DIR / ".env", extra="ignore")
 
+
 class RedisSettings(BaseSettings):
     url: str = Field(alias="REDIS_URL")
     model_config = SettingsConfigDict(
         env_file=BACKEND_DIR / ".env", populate_by_name=True, extra="ignore"
     )
+
 
 class DatabaseSettings(BaseSettings):
     echo: bool = False
@@ -25,9 +27,7 @@ class DatabaseSettings(BaseSettings):
     name: str
 
     model_config = SettingsConfigDict(
-        env_file=BACKEND_DIR / ".env",
-        env_prefix="DB_",
-        extra="ignore"
+        env_file=BACKEND_DIR / ".env", env_prefix="DB_", extra="ignore"
     )
 
     @property
