@@ -10,7 +10,7 @@ from app.favourites.models.favorites import Favourite
 
 async def find_favourite(
     station_id: str, user_id: UUID, session: SessionDep
-) -> Any | None:
+) -> Favourite | None:
     stmt = select(Favourite).where(
         Favourite.station_id == station_id, Favourite.user_id == user_id
     )

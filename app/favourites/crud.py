@@ -1,4 +1,6 @@
 from starlette import status
+from uuid import UUID
+
 from app.database.dependencies import SessionDep
 from app.favourites.models.favorites import Favourite
 from app.favourites.services import find_favourite
@@ -9,18 +11,16 @@ from app.users.dependencies import CurrentUser
 
 
 async def create_favourite_station(
-    station_id: str, current_user: CurrentUser, session: SessionDep
+    station_id: str, user_id: UUID, session: SessionDep
 ) -> Favourite:
-    if await find_favourite(
-        station_id=station_id, user_id=current_user.id, session=session
-    ):
+    if await find_favourite(station_id=station_id, user_id=user_id, session=session):
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail="This station is already in favourites",
         )
     station = await get_specific_station(station_id=station_id)
     new_favourite_station = Favourite(
-        user_id=current_user.id,
+        user_id=user_id,
         station_id=station_id,
         name=station["name"],
         address=station["address"],
@@ -37,10 +37,10 @@ async def create_favourite_station(
 
 
 async def delete_favourite_station(
-    current_user: CurrentUser, station_id: str, session: SessionDep
+    user_id: UUID, station_id: str, session: SessionDep
 ) -> dict:
     station = await find_favourite(
-        station_id=station_id, user_id=current_user.id, session=session
+        station_id=station_id, user_id=user_id, session=session
     )
     if not station:
         raise HTTPException(
