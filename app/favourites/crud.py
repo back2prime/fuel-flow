@@ -7,7 +7,6 @@ from app.favourites.services import find_favourite
 from fastapi import HTTPException
 
 from app.services.tankerkoenig import get_specific_station
-from app.users.dependencies import CurrentUser
 
 
 async def create_favourite_station(

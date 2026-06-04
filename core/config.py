@@ -9,6 +9,11 @@ class ApiSettings(BaseSettings):
 
     model_config = SettingsConfigDict(env_file=BACKEND_DIR / ".env", extra="ignore")
 
+class RedisSettings(BaseSettings):
+    url: str = Field(alias="REDIS_URL")
+    model_config = SettingsConfigDict(
+        env_file=BACKEND_DIR / ".env", populate_by_name=True, extra="ignore"
+    )
 
 class DatabaseSettings(BaseSettings):
     url: str = Field(alias="DATABASE_URL")
@@ -22,6 +27,7 @@ class DatabaseSettings(BaseSettings):
 class Settings(BaseSettings):
     api: ApiSettings = ApiSettings()
     db: DatabaseSettings = DatabaseSettings()
+    redis: RedisSettings = RedisSettings()
     encoding: str = "utf-8"
 
 

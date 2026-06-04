@@ -1,7 +1,7 @@
 from redis.asyncio import Redis
 from redis.typing import ResponseT
 
-from core.constants import REDIS_URL
+from core.config import settings
 
 
 class RedisHelper:
@@ -27,4 +27,4 @@ class RedisHelper:
         await self._client.aclose()
 
 
-redis_helper = RedisHelper(url=REDIS_URL)
+redis_helper = RedisHelper(url=settings.redis.url)
