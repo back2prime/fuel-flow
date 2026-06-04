@@ -18,9 +18,9 @@ async def find_favourite(
     return result.scalar_one_or_none()
 
 
-async def get_favourite_station_ids(
+async def get_favourites_by_user_id(
     user_id: UUID, session: SessionDep
-) -> Sequence[str]:
-    stmt = select(Favourite.station_id).where(Favourite.user_id == user_id)
+) -> Sequence[Favourite]:
+    stmt = select(Favourite).where(Favourite.user_id == user_id)
     result: Result = await session.execute(stmt)
     return result.scalars().all()

@@ -1,11 +1,14 @@
+from collections.abc import Sequence
+
 from fastapi import APIRouter
 
 from app.database.dependencies import SessionDep
 from app.favourites.crud import create_favourite_station
 from app.favourites.models.favorites import Favourite
 from app.favourites.schemes.favourites import FavouriteGetScheme
-from app.stations.schemes.stations import StationsShowSchemes
+from app.favourites.services import get_favourites_by_user_id
 from app.users.dependencies import CurrentUser
+
 
 favourites_routers = APIRouter()
 
@@ -26,7 +29,10 @@ async def add_favourite(
 @favourites_routers.get(
     path="/users/me/favourites",
     tags=["Favourites"],
-    response_model=list[StationsShowSchemes],
+    response_model=list[FavouriteGetScheme],
 )
-async def get_favourites(current_user: CurrentUser, session: SessionDep):
-    pass
+async def get_favourites(current_user: CurrentUser, session: SessionDep) -> Sequence[Favourite]:
+    return await get_favourites_by_user_id(user_id=current_user.id,session=session)
+
+
+
