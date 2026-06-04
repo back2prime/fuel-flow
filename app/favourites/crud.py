@@ -1,5 +1,4 @@
 from starlette import status
-
 from app.database.dependencies import SessionDep
 from app.favourites.models.favorites import Favourite
 from app.favourites.services import find_favourite
@@ -35,3 +34,19 @@ async def create_favourite_station(
     await session.commit()
     await session.refresh(new_favourite_station)
     return new_favourite_station
+
+
+async def delete_favourite_station(
+    current_user: CurrentUser, station_id: str, session: SessionDep
+) -> dict:
+    station = await find_favourite(
+        station_id=station_id, user_id=current_user.id, session=session
+    )
+    if not station:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Station not found",
+        )
+    await session.delete(station)
+    await session.commit()
+    return {"status": "ok"}
