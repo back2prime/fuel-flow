@@ -1,8 +1,8 @@
 """initial_migration
 
-Revision ID: 7c3e94e752bb
+Revision ID: b2ef56ad218f
 Revises:
-Create Date: 2026-06-03 11:39:57.886041
+Create Date: 2026-06-04 11:22:22.966787
 
 """
 
@@ -12,7 +12,7 @@ from alembic import op
 import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
-revision: str = "7c3e94e752bb"
+revision: str = "b2ef56ad218f"
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -38,6 +38,13 @@ def upgrade() -> None:
         "favourites",
         sa.Column("user_id", sa.UUID(), nullable=False),
         sa.Column("station_id", sa.String(), nullable=False),
+        sa.Column("name", sa.String(), nullable=False),
+        sa.Column("address", sa.String(length=255), nullable=False),
+        sa.Column("is_open", sa.Boolean(), nullable=True),
+        sa.Column("brand", sa.String(), nullable=True),
+        sa.Column("openingTimes", sa.JSON(), nullable=True),
+        sa.Column("overrides", sa.JSON(), nullable=True),
+        sa.Column("wholeDay", sa.Boolean(), nullable=True),
         sa.Column("id", sa.UUID(), nullable=False),
         sa.ForeignKeyConstraint(
             ["user_id"],
