@@ -23,8 +23,8 @@ bcrypt = "^5.0.0"
 httpx = "^0.28.1"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^9.0.3"
-pytest-asyncio = "^1.4.0"
+pytest = "^8.3.0"
+pytest-asyncio = "0.24.0"
 httpx = "^0.28.1"
 python-dotenv = "^1.2.2"
 
@@ -34,4 +34,6 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
-asyncio_default_fixture_loop_scope = "session"
+
+[tool.black]
+exclude = '/(\.venv|\.env.*|tests/\.env.*)/|\.env'

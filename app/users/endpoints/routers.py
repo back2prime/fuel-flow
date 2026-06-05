@@ -28,6 +28,7 @@ user_routers = APIRouter()
     path="/auth/register",
     tags=["Users"],
     response_model=UserGetScheme,
+    status_code=201,
 )
 async def register_user(data: UserRegisterScheme, db: SessionDep) -> User:
     return await create_user(data=data, session=db)

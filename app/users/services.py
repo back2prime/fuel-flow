@@ -73,7 +73,7 @@ async def auth_user(data: UserLoginScheme, session: AsyncSession) -> str:
     response = result.scalar_one_or_none()
     if not response:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
         )
     if not response.check_password(password=data.password):
         raise HTTPException(

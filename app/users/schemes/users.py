@@ -13,7 +13,7 @@ class UserRegisterScheme(FrozenModelType):
     password: str
     name: str | None = Field(default=None, max_length=50)
     surname: str | None = Field(default=None, max_length=50)
-    birth_date: date | None
+    birth_date: date | None  = Field(default=None)
 
 
 class UserGetScheme(BaseModel):
