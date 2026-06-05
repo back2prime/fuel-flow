@@ -28,6 +28,7 @@ pytest-asyncio = "0.24.0"
 httpx = "^0.28.1"
 python-dotenv = "^1.2.2"
 pytest-cov = "^7.1.0"
+greenlet = "^3.5.1"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
@@ -35,6 +36,10 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+addopts = "--cov=app --cov-report=term-missing"
 
 [tool.black]
 exclude = '/(\.venv|\.env.*|tests/\.env.*)/|\.env'
+
+[tool.coverage.run]
+concurrency = ["greenlet", "thread"]
