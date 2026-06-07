@@ -4,9 +4,14 @@ A gas station price aggregator for Germany. Enter an address and search radius �
 
 ## Stack
 
+### Backend
 - **Python 3.12** · **FastAPI** · **PostgreSQL** · **Redis**
 - **SQLAlchemy** (async) · **Alembic** · **httpx** · **Pydantic v2**
 - **bcrypt** · **PyJWT** · **Poetry** · **Docker**
+
+### Frontend
+- **React 19** · **Vite** · **Tailwind CSS v4**
+- **React Router v7** · **Axios**
 
 ## Features
 
@@ -14,25 +19,35 @@ A gas station price aggregator for Germany. Enter an address and search radius �
 - Redis caching (30 min TTL) to minimize API calls
 - JWT-based authentication (register, login, protected routes)
 - Save and manage favourite stations per user
+- Toggle favourites directly from search results
 - Fully async backend (asyncpg + SQLAlchemy async)
 
 ## Project Structure
 
 ```
 fuel-flow/
-├── app/
-│   ├── stations/       # Station search endpoints
-│   ├── favourites/     # Favourites management
-│   ├── users/          # Auth, user profile
-│   └── services/       # Tankerkönig API client, utils
-├── core/
-│   ├── helpers/        # DB, HTTP, Redis, JWT helpers
-│   ├── config.py       # Settings (Pydantic BaseSettings)
-│   └── constants.py
-├── alembic/            # Database migrations
-├── Dockerfile
+├── backend/
+│   ├── app/
+│   │   ├── stations/       # Station search endpoints
+│   │   ├── favourites/     # Favourites management
+│   │   ├── users/          # Auth, user profile
+│   │   └── services/       # Tankerkönig API client, utils
+│   ├── core/
+│   │   ├── helpers/        # DB, HTTP, Redis, JWT helpers
+│   │   ├── config.py       # Settings (Pydantic BaseSettings)
+│   │   └── constants.py
+│   ├── alembic/            # Database migrations
+│   ├── Dockerfile
+│   └── pyproject.toml
+├── frontend/
+│   ├── src/
+│   │   ├── api/            # Axios client with JWT interceptor
+│   │   ├── components/     # Navbar
+│   │   └── pages/          # SearchPage, LoginPage, RegisterPage, FavouritesPage
+│   ├── index.html
+│   └── vite.config.js
 ├── docker-compose.yml
-└── pyproject.toml
+└── README.md
 ```
 
 ## Getting Started
@@ -40,6 +55,7 @@ fuel-flow/
 ### Prerequisites
 
 - [Docker](https://docs.docker.com/get-docker/) and Docker Compose
+- [Node.js](https://nodejs.org/) 18+ (for frontend development)
 - A Tankerkönig API key — get one free at [creativecommons.tankerkoenig.de](https://creativecommons.tankerkoenig.de/)
 
 ### Setup
@@ -54,10 +70,10 @@ cd fuel-flow
 2. Create a `.env` file based on the example:
 
 ```bash
-cp .env.example .env
+cp backend/.env.example backend/.env
 ```
 
-3. Fill in your values in `.env`:
+3. Fill in your values in `backend/.env`:
 
 ```env
 DB_USER=postgres
@@ -69,7 +85,7 @@ REDIS_URL=redis://redis:6379/0
 API_KEY=your_tankerkoenig_api_key
 ```
 
-4. Start all services:
+4. Start all backend services:
 
 ```bash
 docker-compose up --build
@@ -81,11 +97,21 @@ docker-compose up --build
 docker-compose exec app alembic upgrade head
 ```
 
-6. Open the interactive API docs:
+6. Start the frontend dev server:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+7. Open the app:
 
 ```
-http://localhost:8000/docs
+http://localhost:5173
 ```
+
+API docs available at `http://localhost:8000/docs`
 
 ## API Overview
 
@@ -95,6 +121,8 @@ http://localhost:8000/docs
 |--------|----------|-------------|
 | POST | `/stations` | Search stations by address + radius |
 | POST | `/stations/{station_id}` | Get details for a specific station |
+
+Query param `?limit=N` available on `POST /stations` to limit results.
 
 ### Auth
 
@@ -131,15 +159,16 @@ Authorization: Bearer <token>
 
 Tokens expire after 30 minutes.
 
-## Local Development (without Docker)
+## Local Development (backend without Docker)
 
 1. Install dependencies:
 
 ```bash
+cd backend
 poetry install
 ```
 
-2. Update `.env` — set `DB_HOST=localhost` and `REDIS_URL=redis://localhost:6379/0`
+2. Update `backend/.env` — set `DB_HOST=localhost` and `REDIS_URL=redis://localhost:6379/0`
 
 3. Run the app:
 
