@@ -15,41 +15,48 @@ export default function RegisterPage() {
       await client.post('/auth/register', form)
       navigate('/login')
     } catch {
-      setError('Registrierung fehlgeschlagen')
+      setError('Registration failed. Please try again.')
     }
   }
 
   const fields = [
-    { key: 'login', placeholder: 'Login' },
-    { key: 'email', placeholder: 'E-Mail' },
-    { key: 'password', placeholder: 'Passwort', type: 'password' },
-    { key: 'name', placeholder: 'Vorname' },
-    { key: 'surname', placeholder: 'Nachname' },
-    { key: 'birth_date', placeholder: 'Geburtsdatum', type: 'date' },
+    { key: 'login', label: 'Login', placeholder: 'Your login' },
+    { key: 'email', label: 'Email', placeholder: 'your@email.com' },
+    { key: 'password', label: 'Password', placeholder: 'Your password', type: 'password' },
+    { key: 'name', label: 'First name', placeholder: 'John' },
+    { key: 'surname', label: 'Last name', placeholder: 'Doe' },
+    { key: 'birth_date', label: 'Date of birth', placeholder: '', type: 'date' },
   ]
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-      <div className="bg-gray-900 p-8 rounded-2xl w-full max-w-md">
-        <h1 className="text-2xl font-bold text-white mb-6">Registrieren</h1>
-        {error && <p className="text-red-400 mb-4">{error}</p>}
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 w-full max-w-md">
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">Create an account</h1>
+        <p className="text-gray-400 text-sm mb-6">Join fuel-flow and save your favourite stations</p>
+        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {fields.map(({ key, placeholder, type = 'text' }) => (
-            <input
-              key={key}
-              type={type}
-              className="bg-gray-800 text-white px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-green-400"
-              placeholder={placeholder}
-              value={form[key]}
-              onChange={e => setForm({ ...form, [key]: e.target.value })}
-            />
+          {fields.map(({ key, label, placeholder, type = 'text' }) => (
+            <div key={key}>
+              <label className="text-xs text-gray-400 mb-1 block">{label}</label>
+              <input
+                type={type}
+                className="w-full border border-gray-200 px-4 py-3 rounded-xl outline-none focus:ring-2 focus:ring-[#FF385C] text-gray-900"
+                placeholder={placeholder}
+                value={form[key]}
+                onChange={e => setForm({ ...form, [key]: e.target.value })}
+              />
+            </div>
           ))}
-          <button type="submit" className="bg-green-500 hover:bg-green-400 text-white font-semibold py-3 rounded-lg transition">
-            Registrieren
+          <button
+            type="submit"
+            className="bg-[#FF385C] hover:bg-[#e0314f] text-white font-semibold py-3 rounded-xl transition mt-2"
+          >
+            Sign up
           </button>
         </form>
-        <p className="text-gray-400 mt-4 text-sm">
-          Bereits ein Konto? <Link to="/login" className="text-green-400 hover:underline">Anmelden</Link>
+        <p className="text-gray-400 text-sm mt-4 text-center">
+          Already have an account?{' '}
+          <Link to="/login" className="text-[#FF385C] hover:underline font-medium">Log in</Link>
         </p>
       </div>
     </div>

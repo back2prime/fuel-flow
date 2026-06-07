@@ -14,35 +14,46 @@ export default function LoginPage() {
       localStorage.setItem('access_token', res.data.access_token)
       navigate('/')
     } catch {
-      setError('Ungültige Anmeldedaten')
+      setError('Invalid login or password')
     }
   }
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center">
-      <div className="bg-gray-900 p-8 rounded-2xl w-full max-w-md">
-        <h1 className="text-2xl font-bold text-white mb-6">Anmelden</h1>
-        {error && <p className="text-red-400 mb-4">{error}</p>}
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 w-full max-w-md">
+        <h1 className="text-2xl font-bold text-gray-900 mb-1">Welcome back</h1>
+        <p className="text-gray-400 text-sm mb-6">Log in to your fuel-flow account</p>
+        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <input
-            className="bg-gray-800 text-white px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-green-400"
-            placeholder="Login"
-            value={form.login}
-            onChange={e => setForm({ ...form, login: e.target.value })}
-          />
-          <input
-            type="password"
-            className="bg-gray-800 text-white px-4 py-3 rounded-lg outline-none focus:ring-2 focus:ring-green-400"
-            placeholder="Passwort"
-            value={form.password}
-            onChange={e => setForm({ ...form, password: e.target.value })}
-          />
-          <button type="submit" className="bg-green-500 hover:bg-green-400 text-white font-semibold py-3 rounded-lg transition">
-            Anmelden
+          <div>
+            <label className="text-xs text-gray-400 mb-1 block">Login</label>
+            <input
+              className="w-full border border-gray-200 px-4 py-3 rounded-xl outline-none focus:ring-2 focus:ring-[#FF385C] text-gray-900"
+              placeholder="Your login"
+              value={form.login}
+              onChange={e => setForm({ ...form, login: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="text-xs text-gray-400 mb-1 block">Password</label>
+            <input
+              type="password"
+              className="w-full border border-gray-200 px-4 py-3 rounded-xl outline-none focus:ring-2 focus:ring-[#FF385C] text-gray-900"
+              placeholder="Your password"
+              value={form.password}
+              onChange={e => setForm({ ...form, password: e.target.value })}
+            />
+          </div>
+          <button
+            type="submit"
+            className="bg-[#FF385C] hover:bg-[#e0314f] text-white font-semibold py-3 rounded-xl transition mt-2"
+          >
+            Log in
           </button>
         </form>
-        <p className="text-gray-400 mt-4 text-sm">
-          Noch kein Konto? <Link to="/register" className="text-green-400 hover:underline">Registrieren</Link>
+        <p className="text-gray-400 text-sm mt-4 text-center">
+          Don't have an account?{' '}
+          <Link to="/register" className="text-[#FF385C] hover:underline font-medium">Sign up</Link>
         </p>
       </div>
     </div>
