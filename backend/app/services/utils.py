@@ -13,6 +13,11 @@ geolocator = Nominatim(user_agent="my_app")
 
 def get_coords(address: str) -> tuple:
     location = geolocator.geocode(address)
+    if location is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Address not found: '{address}'. Try a more specific address.",
+        )
     return round(location.latitude, 3), round(location.longitude, 3)
 
 
