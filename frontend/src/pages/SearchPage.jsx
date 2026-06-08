@@ -32,13 +32,17 @@ export default function SearchPage() {
 
   const handleSearch = async (e) => {
     e.preventDefault()
+    if (!form.address.trim()) {
+      setError('Please enter an address.')
+      return
+    }
     setLoading(true)
     setError('')
     try {
       const res = await client.post(`/stations?limit=${form.limit}`, form)
       setStations(res.data)
-    } catch {
-      setError('Something went wrong. Please try again.')
+    } catch (e) {
+      setError(e.response?.data?.detail || 'Something went wrong. Please try again.')
     } finally {
       setLoading(false)
     }
