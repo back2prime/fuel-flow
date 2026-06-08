@@ -1,4 +1,4 @@
-services:
+﻿services:
   app:
     build: ./backend
     ports:
@@ -14,9 +14,9 @@ services:
     env_file:
       - backend/.env
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12344321
+      POSTGRES_DB: fuel_flow
     ports:
       - "5432:5432"
 
