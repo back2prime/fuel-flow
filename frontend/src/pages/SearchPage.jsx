@@ -153,9 +153,7 @@ export default function SearchPage() {
                 </div>
                 <p className="text-gray-500 text-sm mb-4">{s.address} · {s.dist} km</p>
                 <div className="flex gap-2 mb-4">
-                  {s.e5 && <span className="bg-gray-50 border border-gray-100 px-3 py-1 rounded-lg text-sm font-medium">E5 {s.e5}€</span>}
-                  {s.e10 && <span className="bg-gray-50 border border-gray-100 px-3 py-1 rounded-lg text-sm font-medium">E10 {s.e10}€</span>}
-                  {s.diesel && <span className="bg-gray-50 border border-gray-100 px-3 py-1 rounded-lg text-sm font-medium">Diesel {s.diesel}€</span>}
+                  {s.price && <span className="bg-gray-50 border border-gray-100 px-3 py-1 rounded-lg text-sm font-medium">{FUEL_TYPES.find(f => f.value === form.fuel_type)?.label} {s.price}€</span>}
                 </div>
                 <button
                   onClick={() => handleToggleFavourite(s)}
