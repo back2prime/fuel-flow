@@ -19,7 +19,7 @@ from core.helpers.jwt_helper import jwt_helper
 
 
 async def check_email_and_login(
-    login: str | None, email: str | None, session: AsyncSession
+    login: str | None, email: str | None, session: AsyncSession, exclude_user_id=None
 ) -> None:
     conditions = []
     if login:
@@ -30,6 +30,8 @@ async def check_email_and_login(
         return
 
     query = select(User.login, User.email).where(or_(*conditions))
+    if exclude_user_id:
+        query = query.where(User.id != exclude_user_id)
     result: Result = await session.execute(query)
     rows = result.all()
 
@@ -93,7 +95,7 @@ async def edit_user(user: User, data: UserPatchScheme, session: AsyncSession) ->
     login = result.get("login")
     email = result.get("email")
     if login or email:
-        await check_email_and_login(login=login, email=email, session=session)
+        await check_email_and_login(login=login, email=email, session=session, exclude_user_id=user.id)
     for k, v in result.items():
         setattr(user, k, v)
 

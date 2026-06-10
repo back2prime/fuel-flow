@@ -124,24 +124,34 @@ export default function ProfilePage() {
   };
 
   const handleProfileSave = async () => {
-    setProfileSaving(true);
-    setProfileStatus(null);
-    try {
-      const payload = { ...profile };
-      if (!payload.birth_date) delete payload.birth_date;
-      const res = await api.patch("/users/me", payload);
-      setUser(res.data);
+  setProfileSaving(true);
+  setProfileStatus(null);
+  try {
+    const payload = {};
+    if (profile.name !== user.name) payload.name = profile.name;
+    if (profile.surname !== user.surname) payload.surname = profile.surname;
+    if (profile.email !== user.email) payload.email = profile.email;
+    if (profile.birth_date !== (user.birth_date ?? "")) payload.birth_date = profile.birth_date || null;
+
+    if (Object.keys(payload).length === 0) {
+      setProfileStatus({ type: "success", message: "Nothing to update." });
       setProfileDirty(false);
-      setProfileStatus({ type: "success", message: "Profile updated." });
-    } catch (e) {
-      setProfileStatus({
-        type: "error",
-        message: e.response?.data?.detail ?? "Failed to save changes.",
-      });
-    } finally {
-      setProfileSaving(false);
+      return;
     }
-  };
+
+    const res = await api.patch("/users/me", payload);
+    setUser(res.data);
+    setProfileDirty(false);
+    setProfileStatus({ type: "success", message: "Profile updated." });
+  } catch (e) {
+    setProfileStatus({
+      type: "error",
+      message: e.response?.data?.detail ?? "Failed to save changes.",
+    });
+  } finally {
+    setProfileSaving(false);
+  }
+};
 
   const handlePwdChange = (e) => {
     setPwd((p) => ({ ...p, [e.target.name]: e.target.value }));
