@@ -45,4 +45,4 @@ class UserPasswordPatchScheme(BaseModel):
     old_password: str = Field(examples=["MySecurePassword123!"])
     new_password: str = Field(examples=["MySecurePassword123!"])
 
-    _validate_password = field_validator("password")(password_strength_validator)
+    _validate_new_password = field_validator("new_password")(password_strength_validator)
