@@ -16,6 +16,9 @@ from datetime import timezone
 
 from core.constants import JWT_EXPIRE_SECONDS
 from core.helpers.jwt_helper import jwt_helper
+import uuid
+
+from core.helpers.redis_helper import redis_helper
 
 
 async def check_email_and_login(
@@ -83,6 +86,7 @@ async def auth_user(data: UserLoginScheme, session: AsyncSession) -> str:
         )
     payload = {
         "sub": str(response.id),
+        "jti": uuid.uuid4(),
         "exp": datetime.datetime.now(tz=timezone.utc)
         + datetime.timedelta(seconds=JWT_EXPIRE_SECONDS),
     }
@@ -106,7 +110,8 @@ async def edit_user(user: User, data: UserPatchScheme, session: AsyncSession) ->
     return user
 
 
-async def remove_user(user: User, session: AsyncSession) -> dict:
+async def remove_user(user: User, session: AsyncSession, jti: str, ttl: int) -> dict:
+    await redis_helper.set(key=jti, value="blacklisted", ex=ttl)
     await session.delete(user)
     await session.commit()
     return {"status": "ok"}
@@ -125,5 +130,6 @@ async def change_password(
     )
 
 
-async def logout(user: User) -> dict:
+async def logout(user: User, jti: str, ttl: int) -> dict:
+    await redis_helper.set(key=jti, value="blacklisted", ex=ttl)
     return {"status": "ok"}

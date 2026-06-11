@@ -1,6 +1,8 @@
+from datetime import datetime, timezone
+
 from fastapi import APIRouter
 
-from app.users.dependencies import CurrentUser
+from app.users.dependencies import CurrentUser, TokenPayload
 from app.users.models.users import User
 from app.users.schemes.users import (
     UserGetScheme,
@@ -51,8 +53,10 @@ async def login_user(data: UserLoginScheme, db: SessionDep) -> dict:
     tags=["Users"],
     response_model=StatusScheme,
 )
-async def logout_user(user: CurrentUser) -> dict:
-    return await logout(user=user)
+async def logout_user(user: CurrentUser, payload: TokenPayload) -> dict:
+    jti = payload["jti"]
+    ttl = payload["exp"] - int(datetime.now(timezone.utc).timestamp())
+    return await logout(user=user, jti=jti, ttl=ttl)
 
 
 @user_routers.get(
@@ -89,5 +93,7 @@ async def patch_user_password(
     tags=["Users"],
     response_model=StatusScheme,
 )
-async def delete_user(db: SessionDep, user: CurrentUser) -> dict:
-    return await remove_user(session=db, user=user)
+async def delete_user(db: SessionDep, user: CurrentUser, payload: TokenPayload) -> dict:
+    jti = payload["jti"]
+    ttl = payload["exp"] - int(datetime.now(timezone.utc).timestamp())
+    return await remove_user(session=db, user=user, jti=jti, ttl=ttl)

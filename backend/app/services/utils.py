@@ -5,6 +5,7 @@ from fastapi import HTTPException
 from geopy.geocoders import Nominatim
 from starlette import status
 
+from core.constants import JWT_EXPIRE_SECONDS
 from core.helpers.http_helper import http_helper
 from core.helpers.redis_helper import redis_helper
 
@@ -57,7 +58,9 @@ async def check_response(
                     detail=api_response["message"],
                 )
             edit_response = edit_stations_response(api_response["stations"])
-            await redis_helper.set(key=key, value=json.dumps(edit_response), ex=1800)
+            await redis_helper.set(
+                key=key, value=json.dumps(edit_response), ex=JWT_EXPIRE_SECONDS
+            )
             return edit_response
         except KeyError:
             raise HTTPException(
