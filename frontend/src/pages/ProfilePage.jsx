@@ -4,6 +4,14 @@ import api from "../api/client";
 
 const FUEL_CORAL = "#FF385C";
 
+function normalizeError(e, fallback) {
+  const detail = e.response?.data?.detail;
+  if (!detail) return fallback;
+  if (typeof detail === "string") return detail;
+  if (Array.isArray(detail)) return detail.map((d) => d.msg).join(", ");
+  return fallback;
+}
+
 function Avatar({ name, surname }) {
   const initials =
     `${name?.[0] ?? ""}${surname?.[0] ?? ""}`.toUpperCase() || "?";
@@ -71,27 +79,24 @@ export default function ProfilePage() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // profile edit
   const [profile, setProfile] = useState({
     name: "",
     surname: "",
     email: "",
     birth_date: "",
   });
-  const [profileStatus, setProfileStatus] = useState(null); // {type, message}
+  const [profileStatus, setProfileStatus] = useState(null);
   const [profileSaving, setProfileSaving] = useState(false);
   const [profileDirty, setProfileDirty] = useState(false);
 
-  // password
   const [pwd, setPwd] = useState({
-    current_password: "",
+    old_password: "",
     new_password: "",
     confirm: "",
   });
   const [pwdStatus, setPwdStatus] = useState(null);
   const [pwdSaving, setPwdSaving] = useState(false);
 
-  // delete
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [deleteError, setDeleteError] = useState(null);
@@ -124,34 +129,35 @@ export default function ProfilePage() {
   };
 
   const handleProfileSave = async () => {
-  setProfileSaving(true);
-  setProfileStatus(null);
-  try {
-    const payload = {};
-    if (profile.name !== user.name) payload.name = profile.name;
-    if (profile.surname !== user.surname) payload.surname = profile.surname;
-    if (profile.email !== user.email) payload.email = profile.email;
-    if (profile.birth_date !== (user.birth_date ?? "")) payload.birth_date = profile.birth_date || null;
+    setProfileSaving(true);
+    setProfileStatus(null);
+    try {
+      const payload = {};
+      if (profile.name !== user.name) payload.name = profile.name;
+      if (profile.surname !== user.surname) payload.surname = profile.surname;
+      if (profile.email !== user.email) payload.email = profile.email;
+      if (profile.birth_date !== (user.birth_date ?? ""))
+        payload.birth_date = profile.birth_date || null;
 
-    if (Object.keys(payload).length === 0) {
-      setProfileStatus({ type: "success", message: "Nothing to update." });
+      if (Object.keys(payload).length === 0) {
+        setProfileStatus({ type: "success", message: "Nothing to update." });
+        setProfileDirty(false);
+        return;
+      }
+
+      const res = await api.patch("/users/me", payload);
+      setUser(res.data);
       setProfileDirty(false);
-      return;
+      setProfileStatus({ type: "success", message: "Profile updated." });
+    } catch (e) {
+      setProfileStatus({
+        type: "error",
+        message: normalizeError(e, "Failed to save changes."),
+      });
+    } finally {
+      setProfileSaving(false);
     }
-
-    const res = await api.patch("/users/me", payload);
-    setUser(res.data);
-    setProfileDirty(false);
-    setProfileStatus({ type: "success", message: "Profile updated." });
-  } catch (e) {
-    setProfileStatus({
-      type: "error",
-      message: e.response?.data?.detail ?? "Failed to save changes.",
-    });
-  } finally {
-    setProfileSaving(false);
-  }
-};
+  };
 
   const handlePwdChange = (e) => {
     setPwd((p) => ({ ...p, [e.target.name]: e.target.value }));
@@ -174,15 +180,15 @@ export default function ProfilePage() {
     setPwdStatus(null);
     try {
       await api.patch("/users/me/password", {
-        current_password: pwd.current_password,
+        old_password: pwd.old_password,
         new_password: pwd.new_password,
       });
-      setPwd({ current_password: "", new_password: "", confirm: "" });
+      setPwd({ old_password: "", new_password: "", confirm: "" });
       setPwdStatus({ type: "success", message: "Password changed." });
     } catch (e) {
       setPwdStatus({
         type: "error",
-        message: e.response?.data?.detail ?? "Failed to change password.",
+        message: normalizeError(e, "Failed to change password."),
       });
     } finally {
       setPwdSaving(false);
@@ -197,7 +203,7 @@ export default function ProfilePage() {
       localStorage.removeItem("access_token");
       navigate("/");
     } catch (e) {
-      setDeleteError(e.response?.data?.detail ?? "Failed to delete account.");
+      setDeleteError(normalizeError(e, "Failed to delete account."));
       setDeleteLoading(false);
     }
   };
@@ -207,7 +213,9 @@ export default function ProfilePage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div
           className="w-8 h-8 rounded-full border-2 border-t-transparent animate-spin"
-          style={{ borderColor: `${FUEL_CORAL} transparent transparent transparent` }}
+          style={{
+            borderColor: `${FUEL_CORAL} transparent transparent transparent`,
+          }}
         />
       </div>
     );
@@ -282,9 +290,9 @@ export default function ProfilePage() {
           <div className="flex flex-col gap-4">
             <Field
               label="Current password"
-              name="current_password"
+              name="old_password"
               type="password"
-              value={pwd.current_password}
+              value={pwd.old_password}
               onChange={handlePwdChange}
             />
             <Field
@@ -307,7 +315,7 @@ export default function ProfilePage() {
               onClick={handlePwdSave}
               disabled={
                 pwdSaving ||
-                !pwd.current_password ||
+                !pwd.old_password ||
                 !pwd.new_password ||
                 !pwd.confirm
               }
