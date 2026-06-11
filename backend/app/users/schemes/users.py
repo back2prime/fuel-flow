@@ -1,10 +1,11 @@
 from typing import Optional
 from uuid import UUID
 
-from pydantic import Field, EmailStr, BaseModel
+from pydantic import Field, EmailStr, BaseModel, field_validator
 from datetime import date
 
 from core.schemes.base_scheme import FrozenModelType
+from core.utils import password_strength_validator
 
 
 class UserRegisterScheme(FrozenModelType):
@@ -13,7 +14,9 @@ class UserRegisterScheme(FrozenModelType):
     password: str
     name: str | None = Field(default=None, max_length=50)
     surname: str | None = Field(default=None, max_length=50)
-    birth_date: date | None  = Field(default=None)
+    birth_date: date | None = Field(default=None)
+
+    _validate_password = field_validator("password")(password_strength_validator)
 
 
 class UserGetScheme(BaseModel):
@@ -39,5 +42,7 @@ class UserPatchScheme(BaseModel):
 
 
 class UserPasswordPatchScheme(BaseModel):
-    old_password: str
-    new_password: str
+    old_password: str = Field(examples=["MySecurePassword123!"])
+    new_password: str = Field(examples=["MySecurePassword123!"])
+
+    _validate_password = field_validator("password")(password_strength_validator)

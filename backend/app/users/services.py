@@ -95,7 +95,9 @@ async def edit_user(user: User, data: UserPatchScheme, session: AsyncSession) ->
     login = result.get("login")
     email = result.get("email")
     if login or email:
-        await check_email_and_login(login=login, email=email, session=session, exclude_user_id=user.id)
+        await check_email_and_login(
+            login=login, email=email, session=session, exclude_user_id=user.id
+        )
     for k, v in result.items():
         setattr(user, k, v)
 

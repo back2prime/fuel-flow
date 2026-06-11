@@ -9,6 +9,7 @@ from core.helpers.redis_helper import redis_helper
 
 from fastapi.middleware.cors import CORSMiddleware
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     yield

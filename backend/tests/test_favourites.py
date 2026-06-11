@@ -3,7 +3,6 @@ import pytest
 from httpx import AsyncClient
 from unittest.mock import patch, AsyncMock
 
-
 MOCK_STATION = {
     "name": "Test Station",
     "address": "Teststraße 1",
@@ -42,9 +41,7 @@ class TestAddFavourite:
             "app.favourites.crud.get_specific_station",
             new=AsyncMock(return_value=MOCK_STATION),
         ):
-            response = await authorized_client.post(
-                f"/stations/{STATION_ID}/favourite"
-            )
+            response = await authorized_client.post(f"/stations/{STATION_ID}/favourite")
         assert response.status_code == 200
         data = response.json()
         assert data["name"] == "Test Station"
@@ -56,9 +53,7 @@ class TestAddFavourite:
             new=AsyncMock(return_value=MOCK_STATION),
         ):
             await authorized_client.post(f"/stations/{STATION_ID}/favourite")
-            response = await authorized_client.post(
-                f"/stations/{STATION_ID}/favourite"
-            )
+            response = await authorized_client.post(f"/stations/{STATION_ID}/favourite")
         assert response.status_code == 409
 
     async def test_add_favourite_unauthorized(self, client: AsyncClient):
@@ -96,16 +91,12 @@ class TestDeleteFavourite:
         ):
             await authorized_client.post(f"/stations/{STATION_ID}/favourite")
 
-        response = await authorized_client.delete(
-            f"/stations/{STATION_ID}/favourite"
-        )
+        response = await authorized_client.delete(f"/stations/{STATION_ID}/favourite")
         assert response.status_code == 200
         assert response.json()["status"] == "ok"
 
     async def test_delete_favourite_not_found(self, authorized_client: AsyncClient):
-        response = await authorized_client.delete(
-            f"/stations/{STATION_ID}/favourite"
-        )
+        response = await authorized_client.delete(f"/stations/{STATION_ID}/favourite")
         assert response.status_code == 404
 
     async def test_delete_favourite_unauthorized(self, client: AsyncClient):
