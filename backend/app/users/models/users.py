@@ -20,8 +20,8 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(100), unique=True)
     password_hash: Mapped[str] = mapped_column(String(255))
 
-    name: Mapped[str | None]
-    surname: Mapped[str | None]
+    name: Mapped[str | None] = mapped_column(String(50))
+    surname: Mapped[str | None] = mapped_column(String(50))
     birth_date: Mapped[date | None]
 
     favourites: Mapped[list["Favourite"]] = relationship(

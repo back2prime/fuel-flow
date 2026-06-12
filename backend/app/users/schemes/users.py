@@ -34,10 +34,10 @@ class UserLoginScheme(FrozenModelType):
 
 
 class UserPatchScheme(BaseModel):
-    login: Optional[str] = None
-    email: Optional[EmailStr] = None
-    name: Optional[str] = None
-    surname: Optional[str] = None
+    login: Optional[str] = Field(max_length=50)
+    email: Optional[EmailStr] = Field(max_length=100)
+    name: Optional[str] = Field(default=None, max_length=50)
+    surname: Optional[str] = Field(default=None, max_length=50)
     birth_date: Optional[date] = None
 
 
