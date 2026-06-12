@@ -34,12 +34,11 @@ class UserLoginScheme(FrozenModelType):
 
 
 class UserPatchScheme(BaseModel):
-    login: Optional[str] = Field(max_length=50)
-    email: Optional[EmailStr] = Field(max_length=100)
+    login: Optional[str] = Field(default=None, max_length=50)
+    email: Optional[EmailStr] = Field(default=None, max_length=100)
     name: Optional[str] = Field(default=None, max_length=50)
     surname: Optional[str] = Field(default=None, max_length=50)
     birth_date: Optional[date] = None
-
 
 class UserPasswordPatchScheme(BaseModel):
     old_password: str = Field(examples=["MySecurePassword123!"])
