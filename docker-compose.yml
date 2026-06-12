@@ -13,10 +13,6 @@
     image: postgres:16
     env_file:
       - backend/.env
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 12344321
-      POSTGRES_DB: fuel_flow
     ports:
       - "5432:5432"
 
