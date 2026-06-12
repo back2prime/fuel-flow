@@ -23,7 +23,6 @@ async def create_favourite_station(
         station_id=station_id,
         name=station["name"],
         address=station["address"],
-        is_open=station["isOpen"],
         brand=station["brand"],
         openingTimes=station["openingTimes"],
         overrides=station["overrides"],

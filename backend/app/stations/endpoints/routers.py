@@ -16,7 +16,7 @@ async def get_best_stations(data: StationsGetSchemes, limit: int = None):
 
 
 @stations_routers.post(
-    path="/stations/{id}", tags=["Stations"], response_model=StationShowInfo
+    path="/stations/{station_id}", tags=["Stations"], response_model=StationShowInfo
 )
 async def get_station(station_id: str):
     res = await get_specific_station(station_id)

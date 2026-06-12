@@ -18,7 +18,6 @@ class Favourite(Base):
     station_id: Mapped[str]
     name: Mapped[str]
     address: Mapped[str] = mapped_column(String(255))
-    is_open: Mapped[bool | None]
     brand: Mapped[str | None]
     openingTimes: Mapped[list | None] = mapped_column(JSON, nullable=True)
     overrides: Mapped[list | None] = mapped_column(JSON, nullable=True)
