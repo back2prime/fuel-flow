@@ -40,6 +40,7 @@ class UserPatchScheme(BaseModel):
     surname: Optional[str] = Field(default=None, max_length=50)
     birth_date: Optional[date] = None
 
+
 class UserPasswordPatchScheme(BaseModel):
     old_password: str = Field(examples=["MySecurePassword123!"])
     new_password: str = Field(examples=["MySecurePassword123!"])
