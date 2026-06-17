@@ -25,7 +25,7 @@ class User(Base):
     birth_date: Mapped[date | None]
 
     favourites: Mapped[list["Favourite"]] = relationship(
-        argument="Favourite", back_populates="user"
+        argument="Favourite", back_populates="user", cascade="all, delete-orphan"
     )
 
     @staticmethod
