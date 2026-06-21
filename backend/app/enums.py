@@ -10,3 +10,18 @@ class FuelType(str, Enum):
 class SortType(str, Enum):
     price = "price"
     dist = "dist"
+
+
+class ResponseKey(str, Enum):
+    STATION = "station"
+    STATIONS = "stations"
+
+
+class CachePrefix(str, Enum):
+    STATION = "station:detail"
+    STATIONS = "stations:search"
+
+
+class ApiMethod(str, Enum):
+    STATION = "detail.php"
+    STATIONS = "list.php"

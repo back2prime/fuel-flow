@@ -8,6 +8,7 @@ from app.favourites.crud import create_favourite_station, delete_favourite_stati
 from app.favourites.models.favorites import Favourite
 from app.favourites.schemes.favourites import FavouriteGetScheme
 from app.favourites.services import get_favourites_by_user_id
+from app.services.dependencies import TankerkoenigDep
 from app.users.dependencies import CurrentUser
 from core.schemes.common import StatusScheme
 
@@ -20,10 +21,13 @@ favourites_routers = APIRouter()
     response_model=FavouriteGetScheme,
 )
 async def add_favourite(
-    station_id: str, current_user: CurrentUser, session: SessionDep
+    station_id: str,
+    current_user: CurrentUser,
+    session: SessionDep,
+    service: TankerkoenigDep,
 ) -> Favourite:
     return await create_favourite_station(
-        station_id=station_id, user_id=current_user.id, session=session
+        station_id=station_id, user_id=current_user.id, session=session, service=service
     )
 
 
