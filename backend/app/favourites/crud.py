@@ -2,22 +2,30 @@ from starlette import status
 from uuid import UUID
 
 from app.database.dependencies import SessionDep
+from app.enums import CachePrefix, ApiMethod, ResponseKey
 from app.favourites.models.favorites import Favourite
 from app.favourites.services import find_favourite
 from fastapi import HTTPException
 
-from app.services.tankerkoenig import get_specific_station
+from app.services.dependencies import TankerkoenigDep
+from app.stations.schemes.stations import StationGetScheme
 
 
 async def create_favourite_station(
-    station_id: str, user_id: UUID, session: SessionDep
+    station_id: str, user_id: UUID, session: SessionDep, service: TankerkoenigDep
 ) -> Favourite:
     if await find_favourite(station_id=station_id, user_id=user_id, session=session):
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail="This station is already in favourites",
         )
-    station = await get_specific_station(station_id=station_id)
+    station = await service.get_redis_response(
+        obj=StationGetScheme(id=station_id),
+        prefix=CachePrefix.STATION,
+        method=ApiMethod.STATION,
+        response_key=ResponseKey.STATION,
+    )
+    station = station[0]
     new_favourite_station = Favourite(
         user_id=user_id,
         station_id=station_id,

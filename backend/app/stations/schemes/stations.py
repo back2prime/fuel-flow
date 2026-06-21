@@ -9,6 +9,10 @@ class StationShowBase(BaseModel):
     is_open: bool | None = Field(alias="isOpen")
 
 
+class StationGetScheme(BaseModel):
+    id: str = Field(alias="id")
+
+
 class StationsGetSchemes(BaseModel):
     address: str = Field(max_length=255)
     radius: float = Field(le=25, serialization_alias="rad")

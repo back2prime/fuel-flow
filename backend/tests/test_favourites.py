@@ -1,5 +1,4 @@
 import pytest_asyncio
-import pytest
 from httpx import AsyncClient
 from unittest.mock import patch, AsyncMock
 
@@ -23,12 +22,12 @@ async def authorized_client(client: AsyncClient) -> AsyncClient:
         json={
             "login": "favuser",
             "email": "fav@test.com",
-            "password": "secret123",
+            "password": "Secret123!@#",
         },
     )
     response = await client.post(
         "/auth/login",
-        json={"login": "favuser", "password": "secret123"},
+        json={"login": "favuser", "password": "Secret123!@#"},
     )
     token = response.json()["access_token"]
     client.headers["Authorization"] = f"Bearer {token}"
@@ -38,8 +37,8 @@ async def authorized_client(client: AsyncClient) -> AsyncClient:
 class TestAddFavourite:
     async def test_add_favourite_success(self, authorized_client: AsyncClient):
         with patch(
-            "app.favourites.crud.get_specific_station",
-            new=AsyncMock(return_value=MOCK_STATION),
+            "app.services.tankerkoenig.TankerkoenigService.get_redis_response",
+            new=AsyncMock(return_value=[MOCK_STATION]),
         ):
             response = await authorized_client.post(f"/stations/{STATION_ID}/favourite")
         assert response.status_code == 200
@@ -49,8 +48,8 @@ class TestAddFavourite:
 
     async def test_add_favourite_duplicate(self, authorized_client: AsyncClient):
         with patch(
-            "app.favourites.crud.get_specific_station",
-            new=AsyncMock(return_value=MOCK_STATION),
+            "app.services.tankerkoenig.TankerkoenigService.get_redis_response",
+            new=AsyncMock(return_value=[MOCK_STATION]),
         ):
             await authorized_client.post(f"/stations/{STATION_ID}/favourite")
             response = await authorized_client.post(f"/stations/{STATION_ID}/favourite")
@@ -69,8 +68,8 @@ class TestGetFavourites:
 
     async def test_get_favourites_with_data(self, authorized_client: AsyncClient):
         with patch(
-            "app.favourites.crud.get_specific_station",
-            new=AsyncMock(return_value=MOCK_STATION),
+            "app.services.tankerkoenig.TankerkoenigService.get_redis_response",
+            new=AsyncMock(return_value=[MOCK_STATION]),
         ):
             await authorized_client.post(f"/stations/{STATION_ID}/favourite")
 
@@ -86,8 +85,8 @@ class TestGetFavourites:
 class TestDeleteFavourite:
     async def test_delete_favourite_success(self, authorized_client: AsyncClient):
         with patch(
-            "app.favourites.crud.get_specific_station",
-            new=AsyncMock(return_value=MOCK_STATION),
+            "app.services.tankerkoenig.TankerkoenigService.get_redis_response",
+            new=AsyncMock(return_value=[MOCK_STATION]),
         ):
             await authorized_client.post(f"/stations/{STATION_ID}/favourite")
 

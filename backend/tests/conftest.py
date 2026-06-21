@@ -1,14 +1,22 @@
+import sys
+import os
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import pytest_asyncio
 from httpx import AsyncClient, ASGITransport
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from typing import AsyncGenerator
-from app.database.dependencies import db_helper
+from core.helpers.redis_helper import redis_helper, RedisHelper
 from core.models.base import Base
 from dotenv import load_dotenv
 import os
 from pathlib import Path
 import asyncio
-import sys
+from app.main import app
+from redis.asyncio import Redis
+from core.helpers.db_helper import db_helper
+
 
 if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
@@ -21,7 +29,15 @@ TEST_DATABASE_URL = (
 )
 
 
-@pytest_asyncio.fixture(scope="function")
+
+@pytest_asyncio.fixture(autouse=True)
+async def reset_redis():
+    redis_helper._client = Redis.from_url(redis_helper._url)
+    yield
+    await redis_helper._client.aclose()
+
+
+@pytest_asyncio.fixture(scope="function", loop_scope="function")
 async def client() -> AsyncGenerator[AsyncClient, None]:
     engine = create_async_engine(url=TEST_DATABASE_URL, echo=False)
     session_factory = async_sessionmaker(

@@ -27,6 +27,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(fav_router)
 app.include_router(st_router)
 app.include_router(ur_router)
-app.include_router(fav_router)

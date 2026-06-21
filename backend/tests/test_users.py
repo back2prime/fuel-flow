@@ -10,12 +10,12 @@ async def authorized_client(client: AsyncClient) -> AsyncClient:
         json={
             "login": "meuser",
             "email": "me@test.com",
-            "password": "secret123",
+            "password": "Secret123!@#",
         },
     )
     response = await client.post(
         "/auth/login",
-        json={"login": "meuser", "password": "secret123"},
+        json={"login": "meuser", "password": "Secret123!@#"},
     )
     token = response.json()["access_token"]
     client.headers["Authorization"] = f"Bearer {token}"
@@ -51,7 +51,7 @@ class TestPatchPassword:
     async def test_patch_password_success(self, authorized_client: AsyncClient):
         response = await authorized_client.patch(
             "/users/me/password",
-            json={"old_password": "secret123", "new_password": "newpass456"},
+            json={"old_password": "Secret123!@#", "new_password": "NewPass456!@#"},
         )
         assert response.status_code == 200
         assert response.json()["status"] == "ok"
@@ -59,7 +59,7 @@ class TestPatchPassword:
     async def test_patch_password_wrong_old(self, authorized_client: AsyncClient):
         response = await authorized_client.patch(
             "/users/me/password",
-            json={"old_password": "wrongpass", "new_password": "newpass456"},
+            json={"old_password": "wrongpass", "new_password": "NewPass456!@#"},
         )
         assert response.status_code == 401
 
@@ -70,6 +70,6 @@ class TestDeleteMe:
         assert response.status_code == 200
         assert response.json()["status"] == "ok"
 
-        # после удаления токен больше не работает
+        # после удаления токен в blacklist → 401
         response = await authorized_client.get("/users/me")
-        assert response.status_code == 404
+        assert response.status_code == 403

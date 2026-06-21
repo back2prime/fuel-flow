@@ -7,7 +7,7 @@ async def test_register_success(client: AsyncClient):
         json={
             "login": "testuser",
             "email": "test@test.com",
-            "password": "secret123",
+            "password": "Secret123!@#",
         },
     )
     print(response.json())
@@ -18,7 +18,7 @@ async def test_register_duplicate_login(client: AsyncClient):
     data = {
         "login": "duplicate",
         "email": "first@test.com",
-        "password": "secret123",
+        "password": "Secret123!@#",
     }
     await client.post("/auth/register", json=data)
 
@@ -31,7 +31,7 @@ async def test_register_duplicate_email(client: AsyncClient):
     data = {
         "login": "first",
         "email": "duplicate@test.com",
-        "password": "secret123",
+        "password": "Secret123!@#",
     }
     await client.post("/auth/register", json=data)
 
@@ -47,12 +47,12 @@ class TestLogin:
             json={
                 "login": "loginuser",
                 "email": "login@test.com",
-                "password": "secret123",
+                "password": "Secret123!@#",
             },
         )
         response = await client.post(
             "/auth/login",
-            json={"login": "loginuser", "password": "secret123"},
+            json={"login": "loginuser", "password": "Secret123!@#"},
         )
         assert response.status_code == 200
         assert "access_token" in response.json()
@@ -63,7 +63,7 @@ class TestLogin:
             json={
                 "login": "wrongpass",
                 "email": "wrongpass@test.com",
-                "password": "secret123",
+                "password": "Secret123!@#",
             },
         )
         response = await client.post(
@@ -75,6 +75,6 @@ class TestLogin:
     async def test_login_nonexistent_user(self, client: AsyncClient):
         response = await client.post(
             "/auth/login",
-            json={"login": "nobody", "password": "secret123"},
+            json={"login": "nobody", "password": "Secret123!@#"},
         )
         assert response.status_code == 401
