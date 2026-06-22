@@ -15,7 +15,7 @@ class StationGetScheme(BaseModel):
 
 class StationsGetSchemes(BaseModel):
     address: str = Field(max_length=255)
-    radius: float = Field(le=25, serialization_alias="rad")
+    radius: float = Field(le=25,ge=1,serialization_alias="rad")
     fuel_type: FuelType = Field(serialization_alias="type")
     sort_type: SortType = Field(serialization_alias="sort")
 
