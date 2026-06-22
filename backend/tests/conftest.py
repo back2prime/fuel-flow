@@ -17,7 +17,6 @@ from app.main import app
 from redis.asyncio import Redis
 from core.helpers.db_helper import db_helper
 
-
 if sys.platform == "win32":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
@@ -27,7 +26,6 @@ TEST_DATABASE_URL = (
     f"postgresql+asyncpg://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}"
     f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
 )
-
 
 
 @pytest_asyncio.fixture(autouse=True)
