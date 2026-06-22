@@ -35,10 +35,17 @@ class DatabaseSettings(BaseSettings):
         return f"postgresql+asyncpg://{self.user}:{self.password}@{self.host}:{self.port}/{self.name}"
 
 
+class CORSSettings(BaseSettings):
+    allowed_origins: list[str] = Field(alias="ALLOWED_ORIGINS")
+
+    model_config = SettingsConfigDict(env_file=BACKEND_DIR / ".env", extra="ignore")
+
+
 class Settings(BaseSettings):
     api: ApiSettings = ApiSettings()
     db: DatabaseSettings = DatabaseSettings()
     redis: RedisSettings = RedisSettings()
+    cors: CORSSettings = CORSSettings()
     encoding: str = "utf-8"
 
 
