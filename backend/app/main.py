@@ -8,6 +8,7 @@ from core.helpers.http_helper import http_helper
 from core.helpers.redis_helper import redis_helper
 
 from fastapi.middleware.cors import CORSMiddleware
+from core.middleware import LimitBodySizeMiddleware
 
 
 @asynccontextmanager
@@ -26,6 +27,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(LimitBodySizeMiddleware, max_body_size=10_240)
 
 app.include_router(fav_router)
 app.include_router(st_router)

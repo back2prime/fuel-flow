@@ -16,7 +16,9 @@ stations_routers = APIRouter()
     path="/stations", tags=["Stations"], response_model=list[StationsShowSchemes]
 )
 async def get_best_stations(
-    data: StationsGetSchemes, service: TankerkoenigDep, limit: int  = Query(default=10, ge=1, le=50)
+    data: StationsGetSchemes,
+    service: TankerkoenigDep,
+    limit: int = Query(default=10, ge=1, le=50),
 ):
     res = await service.get_redis_response(
         obj=data,

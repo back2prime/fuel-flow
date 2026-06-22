@@ -7,7 +7,8 @@ from pydantic import BaseModel
 from app.enums import ResponseKey, CachePrefix, ApiMethod
 from app.services.utils import (
     get_coords,
-    edit_station_response, edit_stations_response,
+    edit_station_response,
+    edit_stations_response,
 )
 from core.constants import REDIS_EXPIRE_SECONDS
 
