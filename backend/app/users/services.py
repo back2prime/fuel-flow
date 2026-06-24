@@ -1,5 +1,6 @@
 from sqlalchemy import select, Result, or_
 from sqlalchemy.ext.asyncio import AsyncSession
+from core.helpers.logger import logger
 
 from app.users.models.users import User
 from app.users.schemes.users import (
@@ -77,10 +78,12 @@ async def auth_user(data: UserLoginScheme, session: AsyncSession) -> str:
     result = await session.execute(query)
     response = result.scalar_one_or_none()
     if not response:
+        logger.warning("Failed login attempt - user not found: %s", data.login)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
         )
     if not response.check_password(password=data.password):
+        logger.warning("Failed login attempt - wrong password: %s", data.login)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Password is wrong"
         )
