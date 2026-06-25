@@ -41,7 +41,16 @@ class CORSSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file=BACKEND_DIR / ".env", extra="ignore")
 
 
+class ResendSettings(BaseSettings):
+    RESEND_API_KEY: str
+    FRONTEND_URL: str
+    FROM_EMAIL: str
+    model_config = SettingsConfigDict(env_file=BACKEND_DIR / ".env", extra="ignore")
+
+
+
 class Settings(BaseSettings):
+    resend: ResendSettings = ResendSettings()
     api: ApiSettings = ApiSettings()
     db: DatabaseSettings = DatabaseSettings()
     redis: RedisSettings = RedisSettings()
