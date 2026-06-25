@@ -48,7 +48,6 @@ class ResendSettings(BaseSettings):
     model_config = SettingsConfigDict(env_file=BACKEND_DIR / ".env", extra="ignore")
 
 
-
 class Settings(BaseSettings):
     resend: ResendSettings = ResendSettings()
     api: ApiSettings = ApiSettings()
