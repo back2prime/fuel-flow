@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 
 from app.users.dependencies import CurrentUser, TokenPayload
 from app.users.models.users import User
@@ -26,6 +26,7 @@ from app.users.services import (
     reset_password,
 )
 from core.schemes.common import TokenScheme, StatusScheme
+from core.helpers.limiter import limiter
 
 user_routers = APIRouter()
 
@@ -45,7 +46,8 @@ async def register_user(data: UserRegisterScheme, db: SessionDep) -> User:
     tags=["Users"],
     response_model=TokenScheme,
 )
-async def login_user(data: UserLoginScheme, db: SessionDep) -> dict:
+@limiter.limit("10/minute")
+async def login_user(request: Request, data: UserLoginScheme, db: SessionDep) -> dict:
     return {
         "access_token": await auth_user(data=data, session=db),
         "token_type": "bearer",
