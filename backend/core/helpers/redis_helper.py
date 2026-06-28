@@ -21,8 +21,8 @@ class RedisHelper:
     async def get(self, key: str) -> ResponseT:
         return await self._client.get(name=key)
 
-    async def delete(self,key: str) -> ResponseT:
-       return  await self._client.delete(key)
+    async def delete(self, key: str) -> ResponseT:
+        return await self._client.delete(key)
 
     async def close(self) -> None:
         await self._client.aclose()

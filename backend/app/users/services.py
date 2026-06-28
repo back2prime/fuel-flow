@@ -1,3 +1,5 @@
+import secrets
+
 from sqlalchemy import select, Result, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from core.helpers.logger import logger
@@ -8,6 +10,7 @@ from app.users.schemes.users import (
     UserLoginScheme,
     UserPatchScheme,
     UserPasswordPatchScheme,
+    UserPasswordForgot,
 )
 
 from fastapi import HTTPException, status
@@ -15,11 +18,12 @@ from fastapi import HTTPException, status
 import datetime
 from datetime import timezone
 
-from core.constants import JWT_EXPIRE_SECONDS
+from core.constants import JWT_EXPIRE_SECONDS, RESET_TOKEN_EXPIRE_SECONDS
 from core.helpers.jwt_helper import jwt_helper
 import uuid
 
 from core.helpers.redis_helper import redis_helper
+from helpers.email_helper import resend_helper
 
 
 async def check_email_and_login(
@@ -136,3 +140,35 @@ async def change_password(
 async def logout(user: User, jti: str, ttl: int) -> dict:
     await redis_helper.set(key=jti, value="blacklisted", ex=ttl)
     return {"status": "ok"}
+
+
+async def forgot_password(data: UserPasswordForgot, session: AsyncSession) -> dict:
+    query = select(User).where(User.email == data.email)
+    result = await session.execute(query)
+    response = result.scalar_one_or_none()
+    if response:
+        token: str = secrets.token_urlsafe(32)
+        await redis_helper.set(
+            key=f"reset:{token}", value=str(response.id), ex=RESET_TOKEN_EXPIRE_SECONDS
+        )
+        await resend_helper.send_reset_password(to=response.email, token=token)
+    return {"status": "ok"}
+
+
+async def reset_password(new_password: str, token: str, session: AsyncSession) -> dict:
+    key = f"reset:{token}"
+    response = await redis_helper.get(key)
+    if not response:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid or expired token"
+        )
+    decoded_user_id = response.decode("utf-8")
+    query = select(User).where(User.id == decoded_user_id)
+    result = await session.execute(query)
+    data = result.scalar_one_or_none()
+    if data:
+        data.set_password(password=new_password)
+        await session.commit()
+        await redis_helper.delete(key=key)
+        return {"status": "password successfully changed"}
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
