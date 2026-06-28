@@ -37,6 +37,7 @@ user_routers = APIRouter()
     response_model=UserGetScheme,
     status_code=201,
 )
+@limiter.limit("5/minute")
 async def register_user(data: UserRegisterScheme, db: SessionDep) -> User:
     return await create_user(data=data, session=db)
 
@@ -110,6 +111,7 @@ async def delete_user(db: SessionDep, user: CurrentUser, payload: TokenPayload) 
     tags=["Users"],
     response_model=StatusScheme,
 )
+@limiter.limit("1/minute")
 async def forgot_password_handler(data: UserPasswordForgot, db: SessionDep) -> dict:
     return await forgot_password(data=data, session=db)
 
@@ -119,6 +121,7 @@ async def forgot_password_handler(data: UserPasswordForgot, db: SessionDep) -> d
     tags=["Users"],
     response_model=StatusScheme,
 )
+@limiter.limit("1/minute")
 async def reset_password_handler(data: UserPasswordReset, db: SessionDep) -> dict:
     return await reset_password(
         new_password=data.new_password, token=data.token, session=db

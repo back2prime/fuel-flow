@@ -8,6 +8,7 @@ from app.stations.schemes.stations import (
     StationsShowSchemes,
     StationShowInfo,
 )
+from core.helpers.limiter import limiter
 
 stations_routers = APIRouter()
 
@@ -15,6 +16,7 @@ stations_routers = APIRouter()
 @stations_routers.post(
     path="/stations", tags=["Stations"], response_model=list[StationsShowSchemes]
 )
+@limiter.limit("5/minute")
 async def get_best_stations(
     data: StationsGetSchemes,
     service: TankerkoenigDep,
@@ -32,6 +34,7 @@ async def get_best_stations(
 @stations_routers.post(
     path="/stations/{station_id}", tags=["Stations"], response_model=StationShowInfo
 )
+@limiter.limit("5/minute")
 async def get_station(station_id: str, service: TankerkoenigDep):
     res = await service.get_redis_response(
         obj=StationGetScheme(id=station_id),
