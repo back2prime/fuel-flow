@@ -48,3 +48,12 @@ class UserPasswordPatchScheme(BaseModel):
     _validate_new_password = field_validator("new_password")(
         password_strength_validator
     )
+
+
+class UserPasswordForgot(BaseModel):
+    email: EmailStr = Field(max_length=100)
+
+
+class UserPasswordReset(BaseModel):
+    token: str = Field(min_length=43, max_length=43)
+    new_password: str = Field(min_length=12, max_length=100)

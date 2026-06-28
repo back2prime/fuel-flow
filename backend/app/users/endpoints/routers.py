@@ -10,6 +10,8 @@ from app.users.schemes.users import (
     UserLoginScheme,
     UserPatchScheme,
     UserPasswordPatchScheme,
+    UserPasswordForgot,
+    UserPasswordReset,
 )
 
 from app.database.dependencies import SessionDep
@@ -20,6 +22,8 @@ from app.users.services import (
     remove_user,
     change_password,
     logout,
+    forgot_password,
+    reset_password,
 )
 from core.schemes.common import TokenScheme, StatusScheme
 
@@ -97,3 +101,23 @@ async def delete_user(db: SessionDep, user: CurrentUser, payload: TokenPayload) 
     jti = payload["jti"]
     ttl = payload["exp"] - int(datetime.now(timezone.utc).timestamp())
     return await remove_user(session=db, user=user, jti=jti, ttl=ttl)
+
+
+@user_routers.post(
+    path="/auth/forgot-password",
+    tags=["Users"],
+    response_model=StatusScheme,
+)
+async def forgot_password_handler(data: UserPasswordForgot, db: SessionDep) -> dict:
+    return await forgot_password(data=data, session=db)
+
+
+@user_routers.post(
+    path="/auth/reset-password",
+    tags=["Users"],
+    response_model=StatusScheme,
+)
+async def reset_password_handler(data: UserPasswordReset, db: SessionDep) -> dict:
+    return await reset_password(
+        new_password=data.new_password, token=data.token, session=db
+    )
