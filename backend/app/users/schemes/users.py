@@ -56,4 +56,4 @@ class UserPasswordForgot(BaseModel):
 
 class UserPasswordReset(BaseModel):
     token: str = Field(min_length=43, max_length=43)
-    new_password: str = Field(min_length= 12, max_length=100)
+    new_password: str = Field(min_length=12, max_length=100)

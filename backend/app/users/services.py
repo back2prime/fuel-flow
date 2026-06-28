@@ -23,7 +23,7 @@ from core.helpers.jwt_helper import jwt_helper
 import uuid
 
 from core.helpers.redis_helper import redis_helper
-from helpers.email_helper import resend_helper
+from core.helpers.email_helper import resend_helper
 
 
 async def check_email_and_login(
@@ -170,5 +170,5 @@ async def reset_password(new_password: str, token: str, session: AsyncSession) -
         data.set_password(password=new_password)
         await session.commit()
         await redis_helper.delete(key=key)
-        return {"status": "password successfully changed"}
+        return {"status": "ok"}
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")

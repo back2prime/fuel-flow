@@ -21,7 +21,9 @@ from app.users.services import (
     edit_user,
     remove_user,
     change_password,
-    logout, forgot_password, reset_password,
+    logout,
+    forgot_password,
+    reset_password,
 )
 from core.schemes.common import TokenScheme, StatusScheme
 
@@ -106,7 +108,7 @@ async def delete_user(db: SessionDep, user: CurrentUser, payload: TokenPayload) 
     tags=["Users"],
     response_model=StatusScheme,
 )
-async def forgot_password_handler(data:UserPasswordForgot,db: SessionDep)-> dict:
+async def forgot_password_handler(data: UserPasswordForgot, db: SessionDep) -> dict:
     return await forgot_password(data=data, session=db)
 
 
@@ -115,5 +117,7 @@ async def forgot_password_handler(data:UserPasswordForgot,db: SessionDep)-> dict
     tags=["Users"],
     response_model=StatusScheme,
 )
-async def reset_password_handler(data:UserPasswordReset,db: SessionDep)-> dict:
-    return await reset_password(new_password=data.new_password, token=data.token,session=db)
+async def reset_password_handler(data: UserPasswordReset, db: SessionDep) -> dict:
+    return await reset_password(
+        new_password=data.new_password, token=data.token, session=db
+    )
