@@ -14,8 +14,14 @@ export default function LoginPage() {
       localStorage.setItem('access_token', res.data.access_token)
       navigate('/')
     } catch (e) {
-    setError(e.response?.data?.detail || (e.response?.status === 429 ? 'Too many attempts. Please wait a minute.' : 'Invalid login or password'))
-}
+      if (e.response?.status === 429) {
+        setError(e.response?.data?.error || 'Too many attempts. Please wait a minute.')
+      } else if (e.response?.status === 401) {
+        setError('Invalid login or password')
+      } else {
+        setError('Something went wrong. Please try again.')
+      }
+    }
   }
 
   return (
