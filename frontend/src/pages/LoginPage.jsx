@@ -13,9 +13,9 @@ export default function LoginPage() {
       const res = await client.post('/auth/login', form)
       localStorage.setItem('access_token', res.data.access_token)
       navigate('/')
-    } catch {
-      setError('Invalid login or password')
-    }
+    } catch (e) {
+    setError(e.response?.data?.detail || (e.response?.status === 429 ? 'Too many attempts. Please wait a minute.' : 'Invalid login or password'))
+}
   }
 
   return (
