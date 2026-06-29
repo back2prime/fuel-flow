@@ -29,8 +29,8 @@ async def authorized_client(client: AsyncClient) -> AsyncClient:
         "/auth/login",
         json={"login": "favuser", "password": "Secret123!@#"},
     )
-    token = response.json()["access_token"]
-    client.headers["Authorization"] = f"Bearer {token}"
+    token = response.cookies.get("access_token")
+    client.cookies.set("access_token", token)
     return client
 
 
