@@ -55,7 +55,9 @@ async def login_user(
     response: Response, request: Request, data: UserLoginScheme, db: SessionDep
 ) -> dict:
     token = await auth_user(data=data, session=db)
-    response.set_cookie(value=token, key="access_token", httponly=True, samesite="lax")
+    response.set_cookie(
+        key="access_token", value=token, httponly=True, secure=True, samesite="none"
+    )
     return {"status": "ok"}
 
 
@@ -67,7 +69,7 @@ async def login_user(
 async def logout_user(
     response: Response, user: CurrentUser, payload: TokenPayload
 ) -> dict:
-    response.delete_cookie(key="access_token", httponly=True, samesite="lax")
+    response.delete_cookie(key="access_token", secure=True, samesite="none")
     jti = payload["jti"]
     ttl = payload["exp"] - int(datetime.now(timezone.utc).timestamp())
     return await logout(user=user, jti=jti, ttl=ttl)
