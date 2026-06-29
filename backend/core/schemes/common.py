@@ -5,4 +5,3 @@ from typing import Literal
 
 class StatusScheme(FrozenModelType):
     status: Literal["ok"]
-

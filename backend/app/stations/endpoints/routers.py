@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query,Request
+from fastapi import APIRouter, Query, Request
 
 from app.enums import ApiMethod, ResponseKey, CachePrefix
 from app.services.dependencies import TankerkoenigDep
@@ -9,6 +9,7 @@ from app.stations.schemes.stations import (
     StationShowInfo,
 )
 from core.helpers.limiter import limiter
+
 stations_routers = APIRouter()
 
 
@@ -35,7 +36,7 @@ async def get_best_stations(
     path="/stations/{station_id}", tags=["Stations"], response_model=StationShowInfo
 )
 @limiter.limit("5/minute")
-async def get_station(request: Request,station_id: str, service: TankerkoenigDep):
+async def get_station(request: Request, station_id: str, service: TankerkoenigDep):
     res = await service.get_redis_response(
         obj=StationGetScheme(id=station_id),
         prefix=CachePrefix.STATION,
