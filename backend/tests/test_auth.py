@@ -55,7 +55,7 @@ class TestLogin:
             json={"login": "loginuser", "password": "Secret123!@#"},
         )
         assert response.status_code == 200
-        assert "access_token" in response.json()
+        assert "access_token" in response.cookies
 
     async def test_login_wrong_password(self, client: AsyncClient):
         await client.post(

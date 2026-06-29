@@ -1,8 +1,7 @@
 from typing import Annotated
 
 import jwt
-from fastapi import Depends, HTTPException
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import Depends, HTTPException, Cookie
 from sqlalchemy import select
 
 from app.database.dependencies import SessionDep
@@ -10,14 +9,14 @@ from app.users.models.users import User
 from core.helpers.jwt_helper import jwt_helper
 from core.helpers.redis_helper import redis_helper
 
-security = HTTPBearer()
-
 
 async def get_current_user(
-    session: SessionDep, credentials: HTTPAuthorizationCredentials = Depends(security)
+    session: SessionDep, access_token: str | None = Cookie(default=None)
 ) -> User:
+    if access_token is None:
+        raise HTTPException(status_code=401, detail="Not authenticated")
     try:
-        payload = jwt_helper.decode(token=credentials.credentials)
+        payload = jwt_helper.decode(token=access_token)
     except jwt.exceptions.PyJWTError:
         raise HTTPException(status_code=401, detail="Token was expired")
 
@@ -37,10 +36,12 @@ async def get_current_user(
 
 
 async def get_token_payload(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
+    access_token: str | None = Cookie(default=None),
 ) -> dict:
+    if access_token is None:
+        raise HTTPException(status_code=401, detail="Not authenticated")
     try:
-        return jwt_helper.decode(token=credentials.credentials)
+        return jwt_helper.decode(token=access_token)
     except jwt.exceptions.PyJWTError:
         raise HTTPException(status_code=401, detail="Token was expired")
 

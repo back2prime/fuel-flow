@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+
 from app.favourites.endpoints.routers import favourites_routers as fav_router
 from app.stations.endpoints.routers import stations_routers as st_router
 from app.users.endpoints.routers import user_routers as ur_router
@@ -10,6 +13,7 @@ from core.helpers.redis_helper import redis_helper
 
 from fastapi.middleware.cors import CORSMiddleware
 from core.middleware import LimitBodySizeMiddleware
+from core.helpers.limiter import limiter
 
 
 @asynccontextmanager
@@ -20,6 +24,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.add_middleware(
     CORSMiddleware,

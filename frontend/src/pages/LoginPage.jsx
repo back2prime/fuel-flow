@@ -10,11 +10,16 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const res = await client.post('/auth/login', form)
-      localStorage.setItem('access_token', res.data.access_token)
+      await client.post('/auth/login', form)
       navigate('/')
-    } catch {
-      setError('Invalid login or password')
+    } catch (e) {
+      if (e.response?.status === 429) {
+        setError(e.response?.data?.error || 'Too many attempts. Please wait a minute.')
+      } else if (e.response?.status === 401) {
+        setError('Invalid login or password')
+      } else {
+        setError('Something went wrong. Please try again.')
+      }
     }
   }
 
