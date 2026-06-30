@@ -102,11 +102,6 @@ export default function ProfilePage() {
   const [deleteError, setDeleteError] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("access_token");
-    if (!token) {
-      navigate("/login");
-      return;
-    }
     api
       .get("/users/me")
       .then((res) => {
@@ -200,7 +195,6 @@ export default function ProfilePage() {
     setDeleteError(null);
     try {
       await api.delete("/users/me");
-      localStorage.removeItem("access_token");
       navigate("/");
     } catch (e) {
       setDeleteError(normalizeError(e, "Failed to delete account."));
