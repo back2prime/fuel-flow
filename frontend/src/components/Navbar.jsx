@@ -1,3 +1,5 @@
+import client from '../api/client'
+
 import { Link, useNavigate } from 'react-router-dom'
 
 function FuelDropIcon() {
@@ -14,12 +16,12 @@ function FuelDropIcon() {
   )
 }
 
-export default function Navbar() {
+export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
   const navigate = useNavigate()
-  const token = localStorage.getItem('access_token')
 
-  const handleLogout = () => {
-    localStorage.removeItem('access_token')
+  const handleLogout = async () => {
+    await client.post('/auth/logout')
+    setIsLoggedIn(false)
     navigate('/login')
   }
 
@@ -30,7 +32,7 @@ export default function Navbar() {
         fuel-flow
       </Link>
       <div className="flex gap-4 items-center">
-        {token ? (
+        {isLoggedIn ? (
           <>
             <Link to="/favourites" className="text-gray-600 hover:text-gray-900 font-medium transition">
               My Favourites

@@ -2,17 +2,19 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import client from '../api/client'
 
-export default function LoginPage() {
+export default function LoginPage({ setIsLoggedIn }) {
   const [form, setForm] = useState({ login: '', password: '' })
   const [error, setError] = useState('')
   const navigate = useNavigate()
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    try {
-      await client.post('/auth/login', form)
-      navigate('/')
-    } catch (e) {
+const handleSubmit = async (e) => {
+  e.preventDefault()
+  try {
+    await client.post('/auth/login', form)
+    console.log('login success, setting isLoggedIn=true')
+    setIsLoggedIn(true)
+    navigate('/')
+  } catch (e) {
       if (e.response?.status === 429) {
         setError(e.response?.data?.error || 'Too many attempts. Please wait a minute.')
       } else if (e.response?.status === 401) {
