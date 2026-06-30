@@ -73,7 +73,7 @@ function StatusBadge({ type, message }) {
   );
 }
 
-export default function ProfilePage() {
+export default function ProfilePage({ setIsLoggedIn }) {
   const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
@@ -191,16 +191,17 @@ export default function ProfilePage() {
   };
 
   const handleDelete = async () => {
-    setDeleteLoading(true);
-    setDeleteError(null);
-    try {
-      await api.delete("/users/me");
-      navigate("/");
-    } catch (e) {
-      setDeleteError(normalizeError(e, "Failed to delete account."));
-      setDeleteLoading(false);
-    }
-  };
+  setDeleteLoading(true);
+  setDeleteError(null);
+  try {
+    await api.delete("/users/me");
+    setIsLoggedIn(false);
+    navigate("/");
+  } catch (e) {
+    setDeleteError(normalizeError(e, "Failed to delete account."));
+    setDeleteLoading(false);
+  }
+};
 
   if (loading) {
     return (
