@@ -57,7 +57,12 @@ async def login_user(
 ) -> dict:
     token = await auth_user(data=data, session=db)
     response.set_cookie(
-        key="access_token",max_age=JWT_EXPIRE_SECONDS, value=token, httponly=True, secure=True, samesite="none"
+        key="access_token",
+        max_age=JWT_EXPIRE_SECONDS,
+        value=token,
+        httponly=True,
+        secure=True,
+        samesite="none",
     )
     return {"status": "ok"}
 
@@ -110,7 +115,9 @@ async def patch_user_password(
     tags=["Users"],
     response_model=StatusScheme,
 )
-async def delete_user(response: Response,db: SessionDep, user: CurrentUser, payload: TokenPayload) -> dict:
+async def delete_user(
+    response: Response, db: SessionDep, user: CurrentUser, payload: TokenPayload
+) -> dict:
     response.delete_cookie(key="access_token", secure=True, samesite="none")
     jti = payload["jti"]
     ttl = payload["exp"] - int(datetime.now(timezone.utc).timestamp())
