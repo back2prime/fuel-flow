@@ -26,6 +26,7 @@ from app.users.services import (
     forgot_password,
     reset_password,
 )
+from core.constants import JWT_EXPIRE_SECONDS
 from core.schemes.common import StatusScheme
 from core.helpers.limiter import limiter
 
@@ -56,7 +57,7 @@ async def login_user(
 ) -> dict:
     token = await auth_user(data=data, session=db)
     response.set_cookie(
-        key="access_token", value=token, httponly=True, secure=True, samesite="none"
+        key="access_token",max_age=JWT_EXPIRE_SECONDS, value=token, httponly=True, secure=True, samesite="none"
     )
     return {"status": "ok"}
 
