@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import client from '../api/client'
 
 export default function FavouritesPage() {
@@ -9,18 +8,12 @@ export default function FavouritesPage() {
   const [stationDetail, setStationDetail] = useState(null)
   const [detailLoading, setDetailLoading] = useState(false)
   const [detailError, setDetailError] = useState('')
-  const navigate = useNavigate()
 
-  useEffect(() => {
-    const token = localStorage.getItem('access_token')
-    if (!token) {
-      navigate('/login')
-      return
-    }
-    client.get('/users/me/favourites')
-      .then(res => setFavourites(res.data))
-      .catch(() => setError('Failed to load favourites'))
-  }, [navigate])
+useEffect(() => {
+  client.get('/users/me/favourites')
+    .then(res => setFavourites(res.data))
+    .catch(() => setError('Failed to load favourites'))
+}, [])
 
   const handleRemove = async (stationId) => {
     try {
