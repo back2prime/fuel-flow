@@ -16,7 +16,7 @@ const handleSubmit = async (e) => {
     navigate('/')
   } catch (e) {
       if (e.response?.status === 429) {
-        setError(e.response?.data?.error || 'Too many attempts. Please wait a minute.')
+         setError('Too many attempts. Please wait a minute.')
       } else if (e.response?.status === 401) {
         setError('Invalid login or password')
       } else {
