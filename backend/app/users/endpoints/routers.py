@@ -110,7 +110,8 @@ async def patch_user_password(
     tags=["Users"],
     response_model=StatusScheme,
 )
-async def delete_user(db: SessionDep, user: CurrentUser, payload: TokenPayload) -> dict:
+async def delete_user(response: Response,db: SessionDep, user: CurrentUser, payload: TokenPayload) -> dict:
+    response.delete_cookie(key="access_token", secure=True, samesite="none")
     jti = payload["jti"]
     ttl = payload["exp"] - int(datetime.now(timezone.utc).timestamp())
     return await remove_user(session=db, user=user, jti=jti, ttl=ttl)
