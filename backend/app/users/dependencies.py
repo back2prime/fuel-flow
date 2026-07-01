@@ -13,6 +13,12 @@ from core.helpers.redis_helper import redis_helper
 async def get_current_user(
     session: SessionDep, access_token: str | None = Cookie(default=None)
 ) -> User:
+    """Resolve the current authenticated user from the httpOnly cookie.
+
+    Decodes the JWT, checks the blacklist in Redis, then fetches the user
+    from the database. Raises 401 if the token is missing or expired,
+    403 if blacklisted, 404 if the user no longer exists.
+    """
     if access_token is None:
         raise HTTPException(status_code=401, detail="Not authenticated")
     try:
