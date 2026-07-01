@@ -15,6 +15,7 @@ class PriceHistory(Base):
     Written by the Celery worker on each polling cycle.
     Indexed on (station_id, recorded_at) for efficient chart queries.
     """
+
     __tablename__ = "price_histories"
 
     station_id: Mapped[str] = mapped_column(String(36))

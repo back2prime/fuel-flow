@@ -11,6 +11,7 @@ class Base(DeclarativeBase):
     Auto-generates __tablename__ as lowercase class name + 's'.
     Provides a UUID primary key for every model.
     """
+
     __abstract__ = True
 
     @declared_attr.directive
