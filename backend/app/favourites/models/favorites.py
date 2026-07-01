@@ -15,7 +15,7 @@ class Favourite(Base):
     """Association table linking users to their favourite stations."""
 
     user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"))
-    station_id: Mapped[str]
+    station_id: Mapped[str] = mapped_column(String(36))
     name: Mapped[str]
     address: Mapped[str] = mapped_column(String(255))
     brand: Mapped[str | None]
