@@ -31,8 +31,12 @@ class DatabaseSettings(BaseSettings):
     )
 
     @property
-    def url(self) -> str:
+    def async_url(self) -> str:
         return f"postgresql+asyncpg://{self.user}:{self.password}@{self.host}:{self.port}/{self.name}"
+
+    @property
+    def sync_url(self) -> str:
+        return f"postgresql+psycopg2://{self.user}:{self.password}@{self.host}:{self.port}/{self.name}"
 
 
 class CORSSettings(BaseSettings):
