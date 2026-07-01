@@ -6,6 +6,11 @@ from sqlalchemy.dialects.postgresql import UUID
 
 
 class Base(DeclarativeBase):
+    """Declarative base for all SQLAlchemy ORM models.
+
+    Auto-generates __tablename__ as lowercase class name + 's'.
+    Provides a UUID primary key for every model.
+    """
     __abstract__ = True
 
     @declared_attr.directive

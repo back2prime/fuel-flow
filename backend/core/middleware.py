@@ -4,6 +4,10 @@ from starlette.responses import Response
 
 
 class LimitBodySizeMiddleware(BaseHTTPMiddleware):
+    """Middleware that rejects requests exceeding a configured body size limit.
+
+    Returns HTTP 413 if the Content-Length header exceeds max_body_size bytes.
+    """
     def __init__(self, app, max_body_size: int):
         super().__init__(app)
         self.max_body_size = max_body_size
