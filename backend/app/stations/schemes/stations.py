@@ -1,4 +1,6 @@
 from pydantic import BaseModel, Field
+from decimal import Decimal
+
 
 from app.enums import FuelType, SortType
 
@@ -23,7 +25,7 @@ class StationsGetSchemes(BaseModel):
 class StationsShowSchemes(StationShowBase):
     id: str = Field(alias="id")
     distance_to: float = Field(alias="dist")
-    fuel_price: float | None = Field(alias="price")
+    fuel_price: Decimal | None = Field(alias="price")
 
 
 class StationShowInfo(StationShowBase):
@@ -31,6 +33,6 @@ class StationShowInfo(StationShowBase):
     openingTimes: list[dict] | None
     overrides: list | None
     wholeDay: bool | None
-    e5: float | None
-    e10: float | None
-    diesel: float | None
+    e5: Decimal | None
+    e10: Decimal | None
+    diesel: Decimal | None
