@@ -45,7 +45,7 @@ class DatabaseHelper:
         async with self.async_session_factory() as session:
             yield session
 
-    def get_sync_session(self) -> Generator[Session, Any]:
+    def get_sync_session(self) -> Generator[Session, None, None]:
         with self.sync_session_factory() as session:
             yield session
 
