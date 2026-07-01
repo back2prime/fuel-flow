@@ -10,6 +10,11 @@ from core.models.base import Base
 
 
 class PriceHistory(Base):
+    """Stores a historical price snapshot for a single station and fuel type.
+
+    Written by the Celery worker on each polling cycle.
+    Indexed on (station_id, recorded_at) for efficient chart queries.
+    """
     __tablename__ = "price_histories"
 
     station_id: Mapped[str] = mapped_column(String(36))
