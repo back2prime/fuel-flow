@@ -5,6 +5,11 @@ from core.config import settings
 
 
 class ResendHelper:
+    """Wrapper around the Resend SDK for sending transactional emails.
+
+    Loads the HTML reset-password template once at init time.
+    All send methods are async and use resend.Emails.send_async internally.
+    """
     def __init__(self, email: str, key: str):
         self._email = email
         resend.api_key = key
