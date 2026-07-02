@@ -8,6 +8,7 @@ from core.config import settings
 
 from core.helpers.db_helper import db_helper
 from app.favourites.models.favorites import Favourite
+from app.users.models.users import User  # noqa: F401
 
 
 def get_station_id() -> Sequence[str]:
@@ -17,7 +18,7 @@ def get_station_id() -> Sequence[str]:
 
 
 def fetch_station_prices(station_id: str) -> dict:
-    url = f"{HTTP_URL}{ApiMethod.STATION}?id={station_id}&apikey={settings.api.API_KEY}"
+    url = f"{HTTP_URL}{ApiMethod.STATION.value}?id={station_id}&apikey={settings.api.API_KEY}"
     response = httpx.get(url=url).json()
     if not response["ok"]:
         raise ValueError(
