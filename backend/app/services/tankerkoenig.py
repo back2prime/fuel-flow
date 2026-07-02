@@ -40,7 +40,6 @@ class TankerkoenigService:
             api_response = await self.http.get_response(
                 params=params, api_method=method
             )
-            print(api_response)
             if not api_response["ok"]:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,

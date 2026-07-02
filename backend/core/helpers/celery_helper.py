@@ -1,4 +1,5 @@
 """Celery application instance for fuel-flow background workers."""
+
 from celery import Celery
 
 from core.config import settings
@@ -12,3 +13,5 @@ celery_helper.conf.update(
     timezone="UTC",
     enable_utc=True,
 )
+
+import app.worker.beat_schedule  # noqa: E402
