@@ -22,3 +22,26 @@
     image: redis:7
     ports:
       - "6379:6379"
+
+
+  celery-worker:
+    build: ./backend
+    env_file:
+      - backend/.env
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./backend:/app/
+    command: "celery -A core.helpers.celery_helper.celery_helper worker --loglevel=info"
+
+  celery-beat:
+    build: ./backend
+    env_file:
+      - backend/.env
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - ./backend:/app/
+    command: "celery -A core.helpers.celery_helper.celery_helper beat --loglevel=info"
