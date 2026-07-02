@@ -3,6 +3,7 @@
 **/__pycache__/
 *.pyc
 .idea/
+celerybeat-schedule
 
 # Env
 backend/.env
